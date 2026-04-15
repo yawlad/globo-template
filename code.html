@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GLOBO — Твой центр шопинга и стиля</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#b7131a",
+                      "surface-variant": "#e5e2e1",
+                      "on-primary-fixed-variant": "#93000d",
+                      "surface-container-low": "#f6f3f2",
+                      "on-surface": "#1c1b1b",
+                      "secondary": "#bc000a",
+                      "on-secondary-fixed-variant": "#930005",
+                      "on-tertiary-container": "#fffbff",
+                      "tertiary-fixed": "#ffdbcc",
+                      "background": "#fcf9f8",
+                      "surface-container": "#f0eded",
+                      "outline-variant": "#e4beb9",
+                      "on-secondary-container": "#fffbff",
+                      "inverse-on-surface": "#f3f0ef",
+                      "surface-container-highest": "#e5e2e1",
+                      "tertiary-container": "#c55000",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed": "#410002",
+                      "secondary-fixed-dim": "#ffb4aa",
+                      "on-background": "#1c1b1b",
+                      "surface-container-high": "#eae7e7",
+                      "on-secondary": "#ffffff",
+                      "surface": "#fcf9f8",
+                      "primary-container": "#db322f",
+                      "error-container": "#ffdad6",
+                      "surface-tint": "#bb171c",
+                      "on-surface-variant": "#5b403d",
+                      "on-primary": "#ffffff",
+                      "on-primary-container": "#fffbff",
+                      "surface-dim": "#dcd9d9",
+                      "secondary-container": "#e2241f",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#410001",
+                      "outline": "#906f6c",
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#ffb4ac",
+                      "surface-bright": "#fcf9f8",
+                      "primary-fixed": "#ffdad6",
+                      "tertiary-fixed-dim": "#ffb694",
+                      "inverse-surface": "#313030",
+                      "on-tertiary-fixed": "#351000",
+                      "error": "#ba1a1a",
+                      "tertiary": "#9d3e00",
+                      "primary-fixed-dim": "#ffb4ac",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "secondary-fixed": "#ffdad5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": ["Plus Jakarta Sans"],
+                      "body": ["Manrope"],
+                      "label": ["Manrope"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-nav { backdrop-filter: blur(20px); }
+        .editorial-shadow { box-shadow: 0px 10px 30px rgba(183, 19, 26, 0.06); }
+        .gradient-action { background: linear-gradient(135deg, #E53935 0%, #FF6A00 100%); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl shadow-[0px_10px_30px_rgba(183,19,26,0.06)]">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+<div class="text-2xl font-black tracking-tighter text-red-600 dark:text-red-500">GLOBO</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-zinc-800 dark:text-zinc-200 font-medium hover:text-red-500 transition-colors duration-300" href="#">Shops</a>
+<a class="text-zinc-800 dark:text-zinc-200 font-medium hover:text-red-500 transition-colors duration-300" href="#">Map</a>
+<a class="text-zinc-800 dark:text-zinc-200 font-medium hover:text-red-500 transition-colors duration-300" href="#">News</a>
+<a class="text-zinc-800 dark:text-zinc-200 font-medium hover:text-red-500 transition-colors duration-300" href="#">Contacts</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<input class="bg-surface-container-low border-none rounded-full px-6 py-2 w-64 focus:ring-2 focus:ring-primary/20 text-sm" placeholder="Search..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface hover:text-primary transition-colors duration-300" data-icon="language">language</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Main Lobby" class="w-full h-full object-cover" data-alt="Modern architectural interior of a luxury shopping mall with glass ceilings, sunlight streaming through, and high-end storefronts in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVEa5qWoIrZ6NMJBEJUSWOOZXx8Ig7TsjlrdCqYg_SQLSqyF5ZmT4jBQXkfBgex-rPVzjIwMUnwGL2Z3qB25VE1kpWCkkS5uQkiAcg2hJX0N05BRnWBHK3RjizcxgrG9m4nGz0pJSVJCGmg2WcTouBpj4JIpa3_l7sgF3CXRtFwyLfxqzs8T1I5Vsw5WrJUq3iuDTULJXKThKRHpbTdQIB2YjHV69IJQfiHuOErav73wOcYJ1i_KBR1M1vtrMylYMGCz9xwWwzhNg"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/40 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
+<div class="max-w-2xl">
+<span class="inline-block px-4 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-bold tracking-widest uppercase mb-6">Minsk, Belarus</span>
+<h1 class="text-6xl md:text-8xl font-extrabold tracking-tighter leading-tight mb-8 text-on-surface">
+                    Globo — Твой центр <span class="text-primary italic">шопинга</span> и стиля
+                </h1>
+<div class="flex flex-wrap gap-4">
+<a class="gradient-action text-white px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-transform duration-200 shadow-lg editorial-shadow" href="#">
+                        Магазины
+                    </a>
+<a class="bg-surface-container-lowest text-on-surface px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-transform duration-200 shadow-sm border border-outline-variant/10" href="#">
+                        Карта ТЦ
+                    </a>
+</div>
+</div>
+</div>
+<div class="absolute bottom-12 right-8 hidden lg:flex items-center gap-4 text-primary font-bold">
+<span class="w-24 h-[2px] bg-primary"></span>
+<p class="text-sm tracking-widest uppercase">Explore the pulse</p>
+</div>
+</header>
+<!-- Advantages Bento Grid -->
+<section class="py-24 bg-surface">
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Metro Card -->
+<div class="md:col-span-2 bg-surface-container-lowest p-8 rounded-xl flex items-end justify-between overflow-hidden relative group">
+<div>
+<span class="material-symbols-outlined text-5xl text-primary mb-4" data-icon="directions_subway">directions_subway</span>
+<h3 class="text-2xl font-bold mb-2">Рядом с метро</h3>
+<p class="text-on-surface-variant">Всего 2 минуты пешком от станции метро Михалово.</p>
+</div>
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-9xl" data-icon="map">map</span>
+</div>
+</div>
+<!-- Shops Card -->
+<div class="bg-surface-container-high p-8 rounded-xl">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" data-icon="shopping_bag">shopping_bag</span>
+<h3 class="text-2xl font-bold mb-2">100+ Shops</h3>
+<p class="text-on-surface-variant text-sm">Мировые и локальные бренды в одном месте.</p>
+</div>
+<!-- Parking Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" data-icon="local_parking">local_parking</span>
+<h3 class="text-2xl font-bold mb-2">Free Parking</h3>
+<p class="text-on-surface-variant text-sm">Просторный паркинг для вашего комфорта.</p>
+</div>
+<!-- Food Card -->
+<div class="md:col-span-4 bg-surface-container p-8 rounded-xl flex items-center justify-between">
+<div class="max-w-md">
+<h3 class="text-3xl font-bold mb-2">Cozy Cafes</h3>
+<p class="text-on-surface-variant">Идеальное место для встреч с друзьями или перерыва во время шопинга. Более 15 гастрономических точек.</p>
+</div>
+<div class="flex -space-x-4">
+<img alt="Coffee" class="w-16 h-16 rounded-full border-4 border-surface shadow-md object-cover" data-alt="close-up of a steaming latte art in a white ceramic cup on a wooden table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmIDp-9blYsw3tBluNTPOD9LtSeGZHZ9uUADdFfs56TptvLRXCC_ExlxIrMoCtog5okE9VCSi109SevePwb9aB1K0Qqng2gkjk44wcD6RSDD0IjrcyEIYHQiXT-vN2CvFxrQ2K1ZoxSVYSbIzuT9mpj7sfBj7ugcoHxYBKSrphzEdXcZudWnXHLMdxdk-Qs4pO4sn_NeMSQn-zA0v3iaNqT-qRELuuFkIPFkoTBNh38j4NlPJz5mGGxx7hTXx_DUKJcw-defSB8Es"/>
+<img alt="Food" class="w-16 h-16 rounded-full border-4 border-surface shadow-md object-cover" data-alt="a plate of artisanal gourmet burgers and crispy fries served in a trendy modern restaurant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7dL0-0FJ0qCwjoquvDT5MkG-Vk7y9vHPjg7HBaUj3VDLl9CuThUFa9ndIq8tzqASfdiWSY8tn6IAcgWxSkeUaL3AggDgPEsULgZE5LbTRPMVn4gSZyzvpC8U6G_fNmJ7oGZUTLbGdYKyAV4QsUrbHcYGdIRxkoB3Dn5mNAZoTGCsQaGYXTzFff4KreJiRF76A6fBrdLKpf7OIMjbKYdhFSCUm5BicWtxxjy6QSMXGecZDeKTrrbkzh7bBNEOX9sAMbRQIr2pbZ_Y"/>
+<img alt="Dessert" class="w-16 h-16 rounded-full border-4 border-surface shadow-md object-cover" data-alt="assorted elegant pastries and desserts displayed in a luxury bakery window case" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQweIHJftzfWtyvG5AFSq3lPtah5A7r_cSYZ0ShH3Piiy02Pu8ruoa0x3uewhrsv6bKgxOwDghNvQs6yrTynM_QGe5SDDYDj-LCdI8NF3TU6s2EmgEk37Rm0djTYCgBQq-ZnmxSOJy9n0ALhutDnLPAuAvo4H6B1mKevGn2ZZoQnDknCYeOgtSguXV3ZrvJovB50IH5n7OuJuESrTbtefF0S1_wJYvvQ27fHSV0fT9GDcWW4qVXrfvzxvqTgUy9FpFPKpm2aVvJH0"/>
+<div class="w-16 h-16 rounded-full border-4 border-surface shadow-md bg-primary-container flex items-center justify-center text-white font-bold">+12</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Popular Shops Section -->
+<section class="py-24 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-8">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="text-4xl md:text-5xl font-black tracking-tight mb-4">Популярные бренды</h2>
+<div class="w-20 h-1.5 bg-primary rounded-full"></div>
+</div>
+<a class="text-primary font-bold hover:underline mb-2" href="#">Все магазины →</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+<!-- Shop Card 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Fashion Brand" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="High fashion clothing store display featuring minimalist mannequins in stylish autumn outfits with professional spotlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkIlS4gFGNmgPS-KwAb9DRp5AQkJ2YDybO1XgzzN_GTTc4X-gvd7ryDIFjj632bSBw8ZZ9tyRVMcPlyjFb3KfJfpDiBngr22erCbBH9HaxQppFsf1K0oggXBren94NIz2IEgnWegpaWen6wMiXhDHlCgiJ-Z3VLZuuc19pUoDbbpN8ydqhM0rVrj2G_JPztPhBuQdhqpXOgdI9jCdD3OEC2gy4GJgfwWRu4Yt_PeNAxhgImkn232nXvtU-UrlbHTpJSWp5GhwTKrU"/>
+</div>
+<p class="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">Одежда &amp; Стиль</p>
+<h4 class="text-xl font-bold">Premium Fashion</h4>
+</div>
+<!-- Shop Card 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Beauty Store" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Aesthetic beauty counter with high-end skincare bottles arranged elegantly on a glass shelf with soft ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz1voyMN6T7rzFNIzFRAhuZ7j8df5Cq2JaRu0nul5Km-LDFkbURb64XBfu5qC1mfU_t_LVSF0eTlo50pw0sOUBQ9mkuNB6c_vOu4dtWUERlGxeEk_SscjSxjrH2gjkAnG1km5I5giQthU9bpm8GL1N6O5l7ed1U9r_Au-rrOJnh8R4Ltq--j-lS3ky8hvW3C-dHuepB_dy-pNRPjNuEAtqlAkI8G6ozM4mtjq9E2pG0OaBeU1n084YhzLjG_viJH9c7MCdN9EyUVw"/>
+</div>
+<p class="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">Красота</p>
+<h4 class="text-xl font-bold">Glow Aesthetics</h4>
+</div>
+<!-- Shop Card 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Shoes Shop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Modern sneaker wall featuring vibrant red and white athletic shoes on clean white floating shelves in a minimal store" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBko2eG8SzSRig5EoK1ITdornO70zfYaQTPO02HoGUjjh9ws_ttN7dZOHmHbeKG0MxUtwVvfnfXIZoCpL-Pa9lTD0RC7sjvVZqpPYV-4Ox_0Ud21s1WORn5sLVc1L82RvUSEo4Ji2zEyPnhPsUd7W7gsfQMFnwuStDrfauMc29VRF2YlqYTDe5UClQ5qvCt0L3zfTkg0VHWCjRz-KoLfBkpo_KRUd8yuyBN8GrFH56jWR33qBGX_48syZnTqc4bLeRWp_ediZgV3SI"/>
+</div>
+<p class="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">Обувь</p>
+<h4 class="text-xl font-bold">Stride Active</h4>
+</div>
+<!-- Shop Card 4 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Watch Store" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Luxury watches displayed in a glass mahogany case under warm dramatic lighting, highlighting metallic and leather details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSZXlqA6zOGWiaZr7wfy4wIn76v7zUbWnoT3xkYLpDtMsRU6oMWlTN0dOHRKoGG4WMVhjoKvrEN-IwxBwxafKOmDLtSRvMx3zbMA2tcT2jd_p7R4NGI8ml_vQo1yXY5416pxaReT8fm7xIKiOSL-MflVD6CkBYJVff8u5Vdkf98D5VbR3RdKElIvl0XNHFnhEfmO2rovfTH9UdZCp_kXwA63UpxLgEkYfAKfzvIGteYs71SJ-BFxKE-Jd9wRCXAUGzmVFXyHWEv8c"/>
+</div>
+<p class="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">Аксессуары</p>
+<h4 class="text-xl font-bold">Chronos Luxury</h4>
+</div>
+</div>
+</div>
+</section>
+<!-- Sales & Offers Block -->
+<section class="py-12 bg-surface">
+<div class="max-w-7xl mx-auto px-8">
+<div class="gradient-action rounded-[2rem] p-12 md:p-20 relative overflow-hidden text-white flex flex-col md:flex-row items-center gap-12">
+<div class="z-10 relative flex-1 text-center md:text-left">
+<h2 class="text-5xl md:text-7xl font-black mb-6 leading-none">Сезонные скидки до -70%</h2>
+<p class="text-lg opacity-90 mb-8 max-w-lg">Не упустите возможность обновить свой гардероб по самым выгодным ценам. Только в этом месяце в Globo!</p>
+<button class="bg-white text-primary px-12 py-5 rounded-full font-bold text-lg hover:bg-surface-container-low transition-colors shadow-xl">Смотреть предложения</button>
+</div>
+<div class="z-10 relative flex-1 hidden lg:block">
+<div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 transform rotate-6 scale-110">
+<img alt="Woman with shopping bags" class="rounded-2xl" data-alt="A stylish woman laughing and carrying several colorful luxury shopping bags in a sun-drenched upscale city district" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxY6-O6p5qsnft6ZQ-KIgJEEH_TTzbqOJ5Cd8UOi_GCEyrNASoL9jr-4KkjZbB1Xj0dtfEPBTWt1VK4IVYLRdJzF1AEKENcOjLkWwNZ6S19BmtmjDdF8uFPDxZaRxvDMjlR2emQkaTm9s1RVjbBbvg4uc7chLOOvDPY-GCbu7TGngcZZNHCN6jFCg43uZ6E2tPrFd3RKYBW5WHtpef-6xMYmzHpp4zUFyI3mumRbXt5j-lKt4avNBeRxlyZCzri5tcCzRLK6tCUwI"/>
+</div>
+</div>
+<!-- Abstract floating circle decor -->
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-black/10 rounded-full blur-3xl"></div>
+</div>
+</div>
+</section>
+<!-- News Preview -->
+<section class="py-24 bg-surface">
+<div class="max-w-7xl mx-auto px-8">
+<div class="flex items-center gap-4 mb-12">
+<h2 class="text-3xl font-black">События и новости</h2>
+<div class="flex-grow h-[1px] bg-outline-variant/30"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<article class="group">
+<div class="rounded-xl overflow-hidden mb-6 aspect-video">
+<img alt="Bowling" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="vibrant neon interior of a bowling alley with illuminated lanes and glowing bowling balls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBtYKdvPqK5Au2100hZWN_2XofomxfOX_UoYaHaLvhFV53VcwNMpAkO3kgCefsK7xwJ2rbWSHgKfBMqHVtrV18fbXKhBXXF-jIOdGh2H0WQ4ZHQU1jyEGSBbi4APtfn2fzycFv2kTlD5psBe0RM4IsTupjuMqHmMXwiMcH-wfie7y0mQGrcvMtCbbCuIEdfYrNEeTlvqYubYwHL42MMndBMr6kvzPClFDAos95qevNvciFaAb-UFDj3gUj0ncsnH3JWip0Fx3VILg"/>
+</div>
+<time class="text-sm font-bold text-primary mb-2 block">12 Октября, 2024</time>
+<h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">Открытие новой зоны развлечений</h3>
+<p class="text-on-surface-variant line-clamp-2">Теперь в Globo еще больше драйва! Открылся современный боулинг-центр с неоновым освещением...</p>
+</article>
+<article class="group">
+<div class="rounded-xl overflow-hidden mb-6 aspect-video">
+<img alt="Bakery" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="close-up of colorful macarons in a fancy pink box on a white marble surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq8ilRPwT_yHZ9gKA5kcIRFjiOdnWZU1kfFgLtwuU36g_MqN0FZkp3trptxYp8m4S9ooEpE7A1dWlviA8UWZhvU0h-uTwUQkjg6rOW6p3jnFEYY9TJUXM1B9wXXjQPT4sxEj0DJLnFu0p8X8UrTV7_EfbelqyVUTwd8qZD-TgeXbCwcnGKQm4LVoj1oHsXvumJw9dKNX1Q4_PUDV2mqIPoC6d-5x5q9TyvWCiXIA5-nilRxbxAJfOZnSHLg5YkfJutBSqkUWZpogI"/>
+</div>
+<time class="text-sm font-bold text-primary mb-2 block">8 Октября, 2024</time>
+<h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">Фестиваль десертов в эти выходные</h3>
+<p class="text-on-surface-variant line-clamp-2">Попробуйте лучшие десерты от шеф-кондитеров города. Мастер-классы и дегустации весь день!</p>
+</article>
+<article class="group">
+<div class="rounded-xl overflow-hidden mb-6 aspect-video">
+<img alt="Style" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="elegant evening dresses on gold racks in a brightly lit fashion showroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATVkr5IQmMBlLbaK_jWG85GHCBt3OpQ2yE1ySt7e219r7YmyK_R9eHh-hs3Fyw1oipQhucdmtdV_9-G5pPQeUPceahh7gcH1zT6lUpmhN0poXU_X-vfbq4ZP6TEURYo0xjHIvTDsTveMXD3Z6iQPHBplvWL7khhk0BYpjWaydNFVE9EW9Tvyh-I8EY-z8bPB_uo9Qx7D4vP087mo6Z9K5JFrJxFsB1nGnaTI8sH-YeYuQSFlhEwTZbF78eGS4wjGDpFW4DQ2q_ACk"/>
+</div>
+<time class="text-sm font-bold text-primary mb-2 block">3 Октября, 2024</time>
+<h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">Fashion Week: Итоги показов</h3>
+<p class="text-on-surface-variant line-clamp-2">Рассказываем о главных трендах сезона, которые уже можно найти в магазинах нашего центра.</p>
+</article>
+</div>
+</div>
+</section>
+<!-- Visit CTA & Map -->
+<section class="py-24 bg-surface-container-low overflow-hidden">
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+<div class="relative">
+<div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl"></div>
+<h2 class="text-5xl md:text-6xl font-black mb-8 leading-tight">Ждем вас <br/> в Globo</h2>
+<div class="space-y-6 mb-10">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary p-3 bg-white rounded-xl editorial-shadow" data-icon="location_on">location_on</span>
+<div>
+<p class="font-bold text-lg">Адрес</p>
+<p class="text-on-surface-variant">ул. Уманская, 54, Минск, Беларусь</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary p-3 bg-white rounded-xl editorial-shadow" data-icon="schedule">schedule</span>
+<div>
+<p class="font-bold text-lg">Режим работы</p>
+<p class="text-on-surface-variant">Ежедневно: 10:00 — 22:00</p>
+</div>
+</div>
+</div>
+<button class="gradient-action text-white px-12 py-5 rounded-full font-bold text-lg flex items-center gap-3 hover:scale-105 transition-transform shadow-xl">
+<span class="material-symbols-outlined" data-icon="near_me">near_me</span>
+                    Построить маршрут
+                </button>
+</div>
+<div class="rounded-3xl overflow-hidden h-[500px] shadow-2xl relative grayscale hover:grayscale-0 transition-all duration-700 border-8 border-white">
+<img alt="Map" class="w-full h-full object-cover" data-alt="Stylized top-down street map view with clean minimalist design and a red marker pin on a specific building" data-location="Minsk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoB9SR9Pe9w5_FqTNpn0ZDUh5UULG-8px72TtUbvlbR6yAeyoipfXANa_QyrnJGSg716yZV-cTTPszaag1I_pGFkg1s-dPBM3WVttahMbMJqeV3cEvfNNzFGnng6rtxGTLPdmh0s12GG9MsAPDW4YyGSQQZTq2Q95yBvm8jiMp1EKIjDrTGowvu09t0YANQw3MoVSzQLyQKaNA0-rslyElBrz6O5BTsfiJPtnf408l8GUg6RduZ7k_lGULd8P5j9ooMeY36OSGCaA"/>
+<div class="absolute inset-0 bg-primary/10 pointer-events-none"></div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-zinc-50 dark:bg-zinc-900 w-full py-12 px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="text-xl font-black text-red-600 mb-6">GLOBO</div>
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-6">Ваш главный ориентир в мире шопинга и развлечений в центре Минска.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-zinc-400 hover:text-red-600 cursor-pointer" data-icon="share">share</span>
+<span class="material-symbols-outlined text-zinc-400 hover:text-red-600 cursor-pointer" data-icon="mail">mail</span>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6">Посетителям</h4>
+<ul class="space-y-4">
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Hours of Operation</a></li>
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Contact Us</a></li>
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Магазины</h4>
+<ul class="space-y-4">
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Fashion &amp; Style</a></li>
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Food &amp; Drinks</a></li>
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Electronics</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Инфо</h4>
+<ul class="space-y-4">
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Terms of Service</a></li>
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Arenda</a></li>
+<li><a class="text-zinc-600 dark:text-zinc-400 text-sm font-medium hover:underline hover:text-red-500" href="#">Career</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-8 mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800 text-center">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium">© 2024 Globo Shopping Center. All rights reserved.</p>
+</div>
+</footer>
+<!-- FAB -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="gradient-action text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform editorial-shadow">
+<span class="material-symbols-outlined text-3xl" data-icon="chat_bubble" data-weight="fill" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+</button>
+</div>
+</body></html>
