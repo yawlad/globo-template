@@ -6,7 +6,9 @@ export function HeroSection() {
       alt="Main Lobby"
       className="w-full h-full object-cover"
       data-alt="Modern architectural interior of a luxury shopping mall with glass ceilings, sunlight streaming through, and high-end storefronts in the background"
-      src="/globo/image-1.jpg"
+      // src="/globo/image-1.jpg"
+      // src="/globo/glob.jpg"
+      src="/globo/glob2.png"
     />
     <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/40 to-transparent"></div>
   </div>

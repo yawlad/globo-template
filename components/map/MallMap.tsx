@@ -25,8 +25,8 @@ type Amenity = {
   y: number; // from bottom
 };
 
-const MAP_WIDTH = 1200;
-const MAP_HEIGHT = 760;
+const MAP_WIDTH = 620.8;
+const MAP_HEIGHT = 508.4;
 
 const corridors: PolygonShape[] = [
   // { id: "c-1", points: [[70, 174], [1120, 674], [1120, 602], [70, 602]] },
