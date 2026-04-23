@@ -10,7 +10,17 @@ import {
   rooms,
   type Point,
 } from "@/components/map/mall-map-data";
-import { floorFilters, shops } from "@/components/shops/shops-data";
+import {
+  rentalSpaces,
+  rentalTypeLabels,
+  type RentalSpace,
+} from "@/components/rentals/rentals-data";
+import { floorFilters, shops, type Shop } from "@/components/shops/shops-data";
+import {
+  technicalSpaces,
+  technicalSpaceTypeMeta,
+  type TechnicalSpace,
+} from "@/components/technical/technical-spaces-data";
 
 const MIN_ZOOM = 0.42;
 const MAX_ZOOM = 2.3;
@@ -18,6 +28,38 @@ const AUTO_FIT_MAX_ZOOM = 1.08;
 const ZOOM_STEP = 0.18;
 const VIEWPORT_PADDING = 24;
 const DRAG_THRESHOLD = 8;
+
+type RoomEntity =
+  | { type: "shop"; value: Shop }
+  | { type: "rental"; value: RentalSpace }
+  | { type: "technical"; value: TechnicalSpace };
+
+type PointerState = {
+  moved: boolean;
+  pointerId: number;
+  pressRoomId: string | null;
+  startClientX: number;
+  startClientY: number;
+  startPanX: number;
+  startPanY: number;
+};
+
+type Accent = {
+  fill: string;
+  glowStroke: string | null;
+  overlayOpacity: number;
+  stroke: string;
+};
+
+const INITIAL_POINTER_STATE: PointerState = {
+  moved: false,
+  pointerId: -1,
+  pressRoomId: null,
+  startClientX: 0,
+  startClientY: 0,
+  startPanX: 0,
+  startPanY: 0,
+};
 
 function toSvgY(yFromBottom: number) {
   return MAP_HEIGHT - yFromBottom;
@@ -73,25 +115,64 @@ function getRoomIdFromTarget(target: EventTarget | null) {
   return target.closest("[data-room-id]")?.getAttribute("data-room-id") ?? null;
 }
 
-type PointerState = {
-  moved: boolean;
-  pointerId: number;
-  pressRoomId: string | null;
-  startClientX: number;
-  startClientY: number;
-  startPanX: number;
-  startPanY: number;
-};
+function formatPrice(price: number) {
+  return new Intl.NumberFormat("ru-RU").format(price);
+}
 
-const INITIAL_POINTER_STATE: PointerState = {
-  moved: false,
-  pointerId: -1,
-  pressRoomId: null,
-  startClientX: 0,
-  startClientY: 0,
-  startPanX: 0,
-  startPanY: 0,
-};
+function hexToRgba(hex: string, alpha: number) {
+  const normalized = hex.replace("#", "");
+  const value =
+    normalized.length === 3
+      ? normalized
+          .split("")
+          .map((char) => `${char}${char}`)
+          .join("")
+      : normalized;
+
+  const red = Number.parseInt(value.slice(0, 2), 16);
+  const green = Number.parseInt(value.slice(2, 4), 16);
+  const blue = Number.parseInt(value.slice(4, 6), 16);
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function getEntityAccent(entity: RoomEntity | null, isHovered: boolean, isSelected: boolean): Accent {
+  if (!entity) {
+    return {
+      fill: "#d1d5db",
+      glowStroke: null,
+      overlayOpacity: 0,
+      stroke: "#9ca3af",
+    };
+  }
+
+  if (entity.type === "shop") {
+    return {
+      fill: isHovered || isSelected ? "#f3b44c" : "#f59e0b",
+      stroke: isSelected ? "#bb171c" : "#d97706",
+      glowStroke: isSelected ? "#fff3e0" : isHovered ? "#fde68a" : null,
+      overlayOpacity: isSelected ? 0.08 : 0,
+    };
+  }
+
+  if (entity.type === "rental") {
+    return {
+      fill: isHovered || isSelected ? "#5cb6ff" : "#2f9cf4",
+      stroke: isSelected ? "#155eab" : "#1d78ce",
+      glowStroke: isSelected ? "#d8eeff" : isHovered ? "#b8deff" : null,
+      overlayOpacity: isSelected ? 0.1 : 0,
+    };
+  }
+
+  const meta = technicalSpaceTypeMeta[entity.value.type];
+
+  return {
+    fill: isHovered || isSelected ? hexToRgba(meta.color, 0.86) : hexToRgba(meta.color, 0.72),
+    stroke: meta.color,
+    glowStroke: isSelected ? hexToRgba(meta.color, 0.35) : isHovered ? hexToRgba(meta.color, 0.22) : null,
+    overlayOpacity: isSelected ? 0.1 : 0,
+  };
+}
 
 export function MallMap() {
   const router = useRouter();
@@ -104,26 +185,50 @@ export function MallMap() {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  const shopByRoomId = useMemo(
-    () =>
-      new Map(
-        shops
-          .filter((shop) => shop.roomId)
-          .map((shop) => [shop.roomId as string, shop]),
-      ),
-    [],
-  );
+  const roomEntityById = useMemo(() => {
+    const entities = new Map<string, RoomEntity>();
+
+    shops
+      .filter((shop) => shop.roomId)
+      .forEach((shop) => {
+        entities.set(shop.roomId as string, { type: "shop", value: shop });
+      });
+
+    rentalSpaces.forEach((rentalSpace) => {
+      if (!entities.has(rentalSpace.roomId)) {
+        entities.set(rentalSpace.roomId, { type: "rental", value: rentalSpace });
+      }
+    });
+
+    technicalSpaces.forEach((technicalSpace) => {
+      if (!entities.has(technicalSpace.roomId)) {
+        entities.set(technicalSpace.roomId, {
+          type: "technical",
+          value: technicalSpace,
+        });
+      }
+    });
+
+    return entities;
+  }, []);
 
   const selectedRoom = rooms.find((room) => room.id === selectedRoomId) ?? null;
-  const selectedShop = selectedRoom
-    ? shopByRoomId.get(selectedRoom.id) ?? null
+  const selectedEntity = selectedRoom
+    ? roomEntityById.get(selectedRoom.id) ?? null
     : null;
+  const selectedShop = selectedEntity?.type === "shop" ? selectedEntity.value : null;
+  const selectedRental = selectedEntity?.type === "rental" ? selectedEntity.value : null;
+  const selectedTechnical =
+    selectedEntity?.type === "technical" ? selectedEntity.value : null;
+  const technicalLegendItems = Object.entries(technicalSpaceTypeMeta);
+
   const orderedRooms = useMemo(() => {
-    const regularRooms = rooms.filter((room) => room.id !== selectedRoomId);
-    const activeRoom = rooms.find((room) => room.id === selectedRoomId);
+    const activeRoomId = selectedRoomId ?? hoveredRoomId;
+    const regularRooms = rooms.filter((room) => room.id !== activeRoomId);
+    const activeRoom = rooms.find((room) => room.id === activeRoomId);
 
     return activeRoom ? [...regularRooms, activeRoom] : regularRooms;
-  }, [selectedRoomId]);
+  }, [hoveredRoomId, selectedRoomId]);
 
   useLayoutEffect(() => {
     const element = viewportRef.current;
@@ -186,7 +291,7 @@ export function MallMap() {
   }
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (!event.isPrimary || selectedShop) return;
+    if (!event.isPrimary || selectedEntity) return;
 
     event.currentTarget.setPointerCapture(event.pointerId);
     pointerStateRef.current = {
@@ -203,7 +308,7 @@ export function MallMap() {
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const pointerState = pointerStateRef.current;
-    if (pointerState.pointerId !== event.pointerId || selectedShop) return;
+    if (pointerState.pointerId !== event.pointerId || selectedEntity) return;
 
     const deltaX = event.clientX - pointerState.startClientX;
     const deltaY = event.clientY - pointerState.startClientY;
@@ -231,7 +336,7 @@ export function MallMap() {
     }
 
     if (!pointerState.moved) {
-      if (pointerState.pressRoomId && shopByRoomId.has(pointerState.pressRoomId)) {
+      if (pointerState.pressRoomId && roomEntityById.has(pointerState.pressRoomId)) {
         setSelectedRoomId(pointerState.pressRoomId);
       } else {
         setSelectedRoomId(null);
@@ -279,7 +384,7 @@ export function MallMap() {
         <div
           ref={viewportRef}
           className={`relative h-[clamp(360px,72svh,760px)] w-full select-none overflow-hidden rounded-xl bg-surface-container-low touch-none overscroll-none ${
-            selectedShop ? "cursor-default" : "cursor-grab active:cursor-grabbing"
+            selectedEntity ? "cursor-default" : "cursor-grab active:cursor-grabbing"
           }`}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -318,7 +423,7 @@ export function MallMap() {
 
           <div
             className={`absolute left-0 top-0 select-none rounded-xl border border-outline-variant/30 bg-white ${
-              selectedShop ? "pointer-events-none" : ""
+              selectedEntity ? "pointer-events-none" : ""
             }`}
             style={{
               width: MAP_WIDTH,
@@ -337,21 +442,19 @@ export function MallMap() {
               className="block select-none"
             >
               {orderedRooms.map((room) => {
-                const shop = shopByRoomId.get(room.id);
+                const entity = roomEntityById.get(room.id) ?? null;
                 const svgPoints = toSvgPoints(room.points);
                 const bounds = getBounds(svgPoints);
                 const isHovered = room.id === hoveredRoomId;
                 const isSelected = room.id === selectedRoomId;
-                const isOccupied = Boolean(shop);
-                const isInteractive = isOccupied;
-                const shouldLift = isHovered || isSelected;
+                const isInteractive = Boolean(entity);
+                const accent = getEntityAccent(entity, isHovered, isSelected);
                 const logoSize = Math.max(
                   24,
                   Math.min(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY) *
                     0.38,
                 );
                 const logoBoxSize = logoSize + 16;
-                const roomLabelY = bounds.maxY - 10;
 
                 return (
                   <g
@@ -359,15 +462,17 @@ export function MallMap() {
                     data-room-id={room.id}
                     onMouseEnter={() => setHoveredRoomId(room.id)}
                     onMouseLeave={() =>
-                      setHoveredRoomId((prev) =>
-                        prev === room.id ? null : prev,
-                      )
+                      setHoveredRoomId((prev) => (prev === room.id ? null : prev))
                     }
                     className={isInteractive ? "cursor-pointer" : undefined}
                     style={{
                       transformBox: "fill-box",
                       transformOrigin: "center",
-                      transform: shouldLift ? "translateY(-3px)" : "translateY(0)",
+                      transform: isSelected
+                        ? "scale(1.025)"
+                        : isHovered && isInteractive
+                          ? "scale(1.015)"
+                          : "scale(1)",
                       transition:
                         "transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
                     }}
@@ -375,53 +480,42 @@ export function MallMap() {
                     {isSelected ? (
                       <polygon
                         points={pointsToString(svgPoints)}
-                        fill="#f59e0b"
-                        opacity={0.2}
-                        stroke="#f97316"
+                        fill={
+                          entity?.type === "rental"
+                            ? "#2f9cf4"
+                            : entity?.type === "technical"
+                              ? technicalSpaceTypeMeta[entity.value.type].color
+                              : "#f59e0b"
+                        }
+                        opacity={0.18}
+                        stroke={
+                          entity?.type === "rental"
+                            ? "#1d78ce"
+                            : entity?.type === "technical"
+                              ? technicalSpaceTypeMeta[entity.value.type].color
+                              : "#f97316"
+                        }
                         strokeWidth={10}
                         strokeLinejoin="round"
                       />
                     ) : null}
                     <polygon
                       points={pointsToString(svgPoints)}
-                      fill={
-                        isOccupied
-                          ? isHovered || isSelected
-                            ? "#f3b44c"
-                            : "#f59e0b"
-                          : "#d1d5db"
-                      }
-                      stroke={
-                        isOccupied
-                          ? isSelected
-                            ? "#bb171c"
-                            : "#d97706"
-                          : "#9ca3af"
-                      }
-                      strokeWidth={isOccupied && isSelected ? 3 : 1.5}
+                      fill={accent.fill}
+                      stroke={accent.stroke}
+                      strokeWidth={isInteractive && isSelected ? 3 : 1.5}
                       strokeLinejoin="round"
                       style={{
                         transition:
                           "fill 220ms ease, stroke 220ms ease, stroke-width 220ms ease, opacity 220ms ease",
                       }}
                     />
-                    {isSelected ? (
+                    {accent.glowStroke ? (
                       <polygon
                         points={pointsToString(svgPoints)}
                         fill="none"
-                        stroke="#fff3e0"
+                        stroke={accent.glowStroke}
                         strokeWidth={1.5}
-                        strokeLinejoin="round"
-                        opacity={0.95}
-                        style={{ pointerEvents: "none" }}
-                      />
-                    ) : null}
-                    {isHovered && !isSelected && isOccupied ? (
-                      <polygon
-                        points={pointsToString(svgPoints)}
-                        fill="none"
-                        stroke="#fde68a"
-                        strokeWidth={1.25}
                         strokeLinejoin="round"
                         opacity={0.95}
                         style={{ pointerEvents: "none" }}
@@ -429,35 +523,18 @@ export function MallMap() {
                     ) : null}
                     <polygon
                       points={pointsToString(svgPoints)}
-                      fill={isSelected ? "rgba(255,255,255,0.08)" : "transparent"}
+                      fill={`rgba(255,255,255,${accent.overlayOpacity})`}
                       style={{
                         pointerEvents: "none",
                         transition: "fill 220ms ease",
                       }}
                     />
-                    <text
-                      x={bounds.minX + 8}
-                      y={Math.min(bounds.centerY + 6, roomLabelY)}
-                      fill={isOccupied ? "#ffffff" : "#4b5563"}
-                      fontSize={10}
-                      fontWeight={700}
-                      style={{
-                        pointerEvents: "none",
-                        transition: "fill 220ms ease, opacity 220ms ease",
-                      }}
-                    >
-                      {room.roomNumber}
-                    </text>
-                    {shop ? (
+                    {entity?.type === "shop" ? (
                       <g
                         style={{
                           transformBox: "fill-box",
                           transformOrigin: "center",
-                          transform: isSelected
-                            ? "scale(1.05)"
-                            : isHovered
-                              ? "scale(1.02)"
-                              : "scale(1)",
+                          transform: isHovered || isSelected ? "scale(1.02)" : "scale(1)",
                           transition:
                             "transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
                         }}
@@ -470,24 +547,48 @@ export function MallMap() {
                           rx={12}
                           fill="#ffffff"
                           opacity={isSelected ? 1 : 0.97}
-                          style={{
-                            transition:
-                              "opacity 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
-                          }}
                         />
                         <image
-                          href={shop.logoImage}
+                          href={entity.value.logoImage}
                           x={bounds.centerX - logoSize / 2}
                           y={bounds.centerY - logoSize / 2}
                           width={logoSize}
                           height={logoSize}
                           preserveAspectRatio="xMidYMid contain"
-                          style={{
-                            opacity: isSelected ? 1 : 0.94,
-                            transition:
-                              "opacity 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
-                          }}
+                          style={{ opacity: isSelected ? 1 : 0.94 }}
                         />
+                      </g>
+                    ) : null}
+                    {entity?.type === "rental" ? (
+                      <g style={{ pointerEvents: "none" }}>
+                        <text
+                          x={bounds.centerX}
+                          y={bounds.centerY + 6}
+                          textAnchor="middle"
+                          fill="#1d4f91"
+                          fontFamily="Material Symbols Outlined"
+                          fontSize={22}
+                          fontWeight={800}
+                        >
+                          domain
+                        </text>
+                      </g>
+                    ) : null}
+                    {entity?.type === "technical" ? (
+                      <g style={{ pointerEvents: "none" }}>
+                        {technicalSpaceTypeMeta[entity.value.type].icon ? (
+                          <text
+                            x={bounds.centerX}
+                            y={bounds.centerY + 6}
+                            fill={technicalSpaceTypeMeta[entity.value.type].color}
+                            fontFamily="Material Symbols Outlined"
+                            textAnchor="middle"
+                            fontSize={22}
+                            fontWeight={700}
+                          >
+                            {technicalSpaceTypeMeta[entity.value.type].icon}
+                          </text>
+                        ) : null}
                       </g>
                     ) : null}
                   </g>
@@ -496,7 +597,7 @@ export function MallMap() {
             </svg>
           </div>
 
-          {selectedShop && selectedRoom ? (
+          {selectedEntity && selectedRoom ? (
             <div
               className="absolute inset-0 z-40 flex items-center justify-center bg-[rgba(252,249,248,0.48)] p-4 backdrop-blur-md sm:p-6"
               onClick={() => setSelectedRoomId(null)}
@@ -515,45 +616,167 @@ export function MallMap() {
                       {selectedRoom.roomNumber}
                     </p>
                     <h3 className="mt-2 text-2xl font-black text-on-surface">
-                      {selectedShop.name}
+                      {selectedShop?.name ?? selectedRental?.title ?? selectedTechnical?.title}
                     </h3>
                   </div>
                   <button
                     type="button"
                     onClick={() => setSelectedRoomId(null)}
                     className="flex h-10 w-10 items-center justify-center rounded-full bg-surface text-on-surface-variant transition-all hover:scale-105 hover:text-on-surface"
-                    aria-label="Close shop card"
+                    aria-label="Закрыть карточку"
                   >
                     <span className="material-symbols-outlined">close</span>
                   </button>
                 </div>
 
-                <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-on-surface-variant">
-                  {selectedShop.category}
-                </p>
-                <p className="mt-4 text-sm leading-6 text-on-surface-variant">
-                  {selectedShop.description}
-                </p>
+                {selectedShop ? (
+                  <>
+                    <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-on-surface-variant">
+                      {selectedShop.category}
+                    </p>
+                    <p className="mt-4 text-sm leading-6 text-on-surface-variant">
+                      {selectedShop.description}
+                    </p>
 
-                <div className="mt-5 space-y-2 rounded-2xl bg-surface-container-low px-4 py-3">
-                  <p className="text-sm text-on-surface">
-                    <span className="font-bold">Время работы:</span> {selectedShop.workHours}
-                  </p>
-                  <p className="text-sm text-on-surface">
-                    <span className="font-bold">Телефон:</span> {selectedShop.phone}
-                  </p>
-                </div>
+                    <div className="mt-5 space-y-2 rounded-2xl bg-surface-container-low px-4 py-3">
+                      <p className="text-sm text-on-surface">
+                        <span className="font-bold">Время работы:</span> {selectedShop.workHours}
+                      </p>
+                      <p className="text-sm text-on-surface">
+                        <span className="font-bold">Телефон:</span> {selectedShop.phone}
+                      </p>
+                    </div>
 
-                <button
-                  type="button"
-                  onClick={() => router.push(`/shops/${selectedShop.slug}`)}
-                  className="mt-5 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
-                >
-                  Подробнее
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => router.push(`/shops/${selectedShop.slug}`)}
+                      className="mt-5 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
+                    >
+                      Подробнее
+                    </button>
+                  </>
+                ) : null}
+
+                {selectedRental ? (
+                  <>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {selectedRental.types.map((type) => (
+                        <span
+                          key={type}
+                          className="rounded-full bg-primary-fixed px-3 py-1 text-xs font-bold uppercase tracking-wide text-on-secondary-fixed-variant"
+                        >
+                          {rentalTypeLabels[type]}
+                        </span>
+                      ))}
+                    </div>
+
+                    <p className="mt-4 text-sm leading-6 text-on-surface-variant">
+                      {selectedRental.description}
+                    </p>
+
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <div className="rounded-2xl bg-surface-container-low px-4 py-3">
+                        <p className="text-xs font-bold uppercase tracking-wide text-on-surface-variant">
+                          Цена в месяц
+                        </p>
+                        <p className="mt-1 text-lg font-black text-on-surface">
+                          {formatPrice(selectedRental.monthlyPrice)} BYN
+                        </p>
+                      </div>
+                      <div className="rounded-2xl bg-surface-container-low px-4 py-3">
+                        <p className="text-xs font-bold uppercase tracking-wide text-on-surface-variant">
+                          Площадь
+                        </p>
+                        <p className="mt-1 text-lg font-black text-on-surface">
+                          {selectedRental.areaSqm} м²
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 rounded-2xl border border-dashed border-outline-variant/40 px-4 py-3 text-sm text-on-surface-variant">
+                      Помещение доступно для аренды. Для уточнения условий можно использовать контакты администрации торгового центра.
+                    </div>
+                  </>
+                ) : null}
+
+                {selectedTechnical ? (
+                  <>
+                    <div className="mt-4 flex items-center gap-3 rounded-2xl bg-surface-container-low px-4 py-3">
+                      {technicalSpaceTypeMeta[selectedTechnical.type].icon ? (
+                        <span
+                          className="material-symbols-outlined"
+                          style={{ color: technicalSpaceTypeMeta[selectedTechnical.type].color }}
+                        >
+                          {technicalSpaceTypeMeta[selectedTechnical.type].icon}
+                        </span>
+                      ) : (
+                        <span
+                          className="h-3 w-3 rounded-full"
+                          style={{
+                            backgroundColor: technicalSpaceTypeMeta[selectedTechnical.type].color,
+                          }}
+                        />
+                      )}
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-wide text-on-surface-variant">
+                          Тип помещения
+                        </p>
+                        <p className="text-sm font-semibold text-on-surface">
+                          {technicalSpaceTypeMeta[selectedTechnical.type].label}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="mt-4 text-sm leading-6 text-on-surface-variant">
+                      {selectedTechnical.description}
+                    </p>
+                  </>
+                ) : null}
               </div>
             </div>
           ) : null}
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-outline-variant/25 bg-surface-container-lowest p-4">
+        <div className="flex flex-wrap items-start gap-3">
+          <div className="rounded-xl border border-outline-variant/20 bg-white px-3 py-2 text-sm font-semibold text-on-surface">
+            Легенда
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-2 rounded-xl bg-surface px-3 py-2 text-sm text-on-surface">
+              <span className="h-3 w-3 rounded-full bg-[#f59e0b]" />
+              <span>Магазин</span>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-xl bg-surface px-3 py-2 text-sm text-on-surface">
+              <span className="h-3 w-3 rounded-full bg-[#2f9cf4]" />
+              <span className="material-symbols-outlined text-[18px] text-[#1d4f91]">domain</span>
+              <span>Помещение под аренду</span>
+            </div>
+
+            {technicalLegendItems.map(([type, meta]) => (
+              <div
+                key={type}
+                className="flex items-center gap-2 rounded-xl bg-surface px-3 py-2 text-sm text-on-surface"
+              >
+                <span
+                  className="h-3 w-3 rounded-full"
+                  style={{ backgroundColor: meta.color }}
+                />
+                {meta.icon ? (
+                  <span
+                    className="material-symbols-outlined text-[18px]"
+                    style={{ color: meta.color }}
+                  >
+                    {meta.icon}
+                  </span>
+                ) : null}
+                <span>{meta.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
