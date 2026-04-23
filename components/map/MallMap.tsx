@@ -12,6 +12,13 @@ import {
 } from "@/components/map/mall-map-data";
 import { floorFilters, shops } from "@/components/shops/shops-data";
 
+const MIN_ZOOM = 0.42;
+const MAX_ZOOM = 2.3;
+const AUTO_FIT_MAX_ZOOM = 1.08;
+const ZOOM_STEP = 0.18;
+const VIEWPORT_PADDING = 24;
+const DRAG_THRESHOLD = 8;
+
 function toSvgY(yFromBottom: number) {
   return MAP_HEIGHT - yFromBottom;
 }
@@ -42,6 +49,10 @@ function getBounds(points: Point[]) {
   };
 }
 
+function clampZoom(zoom: number) {
+  return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+}
+
 function getCenteredPan(viewportWidth: number, viewportHeight: number, zoom: number) {
   return {
     x: (viewportWidth - MAP_WIDTH * zoom) / 2,
@@ -49,25 +60,49 @@ function getCenteredPan(viewportWidth: number, viewportHeight: number, zoom: num
   };
 }
 
+function getFitZoom(viewportWidth: number, viewportHeight: number) {
+  const horizontalZoom = (viewportWidth - VIEWPORT_PADDING * 2) / MAP_WIDTH;
+  const verticalZoom = (viewportHeight - VIEWPORT_PADDING * 2) / MAP_HEIGHT;
+
+  return clampZoom(Math.min(horizontalZoom, verticalZoom, AUTO_FIT_MAX_ZOOM));
+}
+
+function getRoomIdFromTarget(target: EventTarget | null) {
+  if (!(target instanceof Element)) return null;
+
+  return target.closest("[data-room-id]")?.getAttribute("data-room-id") ?? null;
+}
+
+type PointerState = {
+  moved: boolean;
+  pointerId: number;
+  pressRoomId: string | null;
+  startClientX: number;
+  startClientY: number;
+  startPanX: number;
+  startPanY: number;
+};
+
+const INITIAL_POINTER_STATE: PointerState = {
+  moved: false,
+  pointerId: -1,
+  pressRoomId: null,
+  startClientX: 0,
+  startClientY: 0,
+  startPanX: 0,
+  startPanY: 0,
+};
+
 export function MallMap() {
-  const MIN_ZOOM = 0.65;
-  const MAX_ZOOM = 2.3;
-  const ZOOM_STEP = 0.16;
   const router = useRouter();
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  const hasManualViewportChangeRef = useRef(false);
+  const pointerStateRef = useRef<PointerState>(INITIAL_POINTER_STATE);
   const [hoveredRoomId, setHoveredRoomId] = useState<string | null>(null);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(MIN_ZOOM);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-
-  useLayoutEffect(() => {
-    const element = viewportRef.current;
-    if (!element) return;
-
-    setPan(getCenteredPan(element.clientWidth, element.clientHeight, 1));
-  }, []);
 
   const shopByRoomId = useMemo(
     () =>
@@ -83,9 +118,6 @@ export function MallMap() {
   const selectedShop = selectedRoom
     ? shopByRoomId.get(selectedRoom.id) ?? null
     : null;
-  const selectedRoomBounds = selectedRoom
-    ? getBounds(toSvgPoints(selectedRoom.points))
-    : null;
   const orderedRooms = useMemo(() => {
     const regularRooms = rooms.filter((room) => room.id !== selectedRoomId);
     const activeRoom = rooms.find((room) => room.id === selectedRoomId);
@@ -93,44 +125,120 @@ export function MallMap() {
     return activeRoom ? [...regularRooms, activeRoom] : regularRooms;
   }, [selectedRoomId]);
 
-  function updateZoom(direction: "in" | "out") {
-    setZoom((prev) =>
-      Math.max(
-        MIN_ZOOM,
-        Math.min(
-          MAX_ZOOM,
-          prev + (direction === "in" ? ZOOM_STEP : -ZOOM_STEP),
-        ),
-      ),
-    );
-  }
+  useLayoutEffect(() => {
+    const element = viewportRef.current;
+    if (!element) return;
 
-  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (!event.isPrimary) return;
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setIsDragging(true);
-    setDragStart({ x: event.clientX - pan.x, y: event.clientY - pan.y });
-  }
+    const fitMapToViewport = () => {
+      if (hasManualViewportChangeRef.current) return;
 
-  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (!isDragging) return;
-    setPan({ x: event.clientX - dragStart.x, y: event.clientY - dragStart.y });
-  }
+      const nextZoom = getFitZoom(element.clientWidth, element.clientHeight);
+      setZoom(nextZoom);
+      setPan(getCenteredPan(element.clientWidth, element.clientHeight, nextZoom));
+    };
 
-  function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
+    fitMapToViewport();
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      fitMapToViewport();
+    });
+
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  function resetPointerState() {
+    pointerStateRef.current = INITIAL_POINTER_STATE;
     setIsDragging(false);
   }
 
-  function handleRoomClick(roomId: string) {
-    if (!shopByRoomId.has(roomId)) {
-      setSelectedRoomId(null);
+  function applyZoom(nextZoom: number) {
+    const element = viewportRef.current;
+    const normalizedZoom = clampZoom(nextZoom);
+
+    if (!element) {
+      setZoom(normalizedZoom);
       return;
     }
 
-    setSelectedRoomId(roomId);
+    setPan((currentPan) => {
+      const viewportCenterX = element.clientWidth / 2;
+      const viewportCenterY = element.clientHeight / 2;
+      const mapCenterX = (viewportCenterX - currentPan.x) / zoom;
+      const mapCenterY = (viewportCenterY - currentPan.y) / zoom;
+
+      return {
+        x: viewportCenterX - mapCenterX * normalizedZoom,
+        y: viewportCenterY - mapCenterY * normalizedZoom,
+      };
+    });
+    setZoom(normalizedZoom);
+  }
+
+  function updateZoom(direction: "in" | "out") {
+    hasManualViewportChangeRef.current = true;
+    applyZoom(zoom + (direction === "in" ? ZOOM_STEP : -ZOOM_STEP));
+  }
+
+  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (!event.isPrimary || selectedShop) return;
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+    pointerStateRef.current = {
+      moved: false,
+      pointerId: event.pointerId,
+      pressRoomId: getRoomIdFromTarget(event.target),
+      startClientX: event.clientX,
+      startClientY: event.clientY,
+      startPanX: pan.x,
+      startPanY: pan.y,
+    };
+    setIsDragging(false);
+  }
+
+  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    const pointerState = pointerStateRef.current;
+    if (pointerState.pointerId !== event.pointerId || selectedShop) return;
+
+    const deltaX = event.clientX - pointerState.startClientX;
+    const deltaY = event.clientY - pointerState.startClientY;
+    const distance = Math.hypot(deltaX, deltaY);
+
+    if (distance < DRAG_THRESHOLD && !pointerState.moved) {
+      return;
+    }
+
+    hasManualViewportChangeRef.current = true;
+    pointerStateRef.current.moved = true;
+    setIsDragging(true);
+    setPan({
+      x: pointerState.startPanX + deltaX,
+      y: pointerState.startPanY + deltaY,
+    });
+  }
+
+  function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    const pointerState = pointerStateRef.current;
+    if (pointerState.pointerId !== event.pointerId) return;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (!pointerState.moved) {
+      if (pointerState.pressRoomId && shopByRoomId.has(pointerState.pressRoomId)) {
+        setSelectedRoomId(pointerState.pressRoomId);
+      } else {
+        setSelectedRoomId(null);
+      }
+    }
+
+    resetPointerState();
   }
 
   return (
@@ -170,12 +278,18 @@ export function MallMap() {
       <div className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-3 md:p-4">
         <div
           ref={viewportRef}
-          className="relative h-[520px] w-full select-none overflow-hidden rounded-xl bg-surface-container-low touch-none overscroll-none cursor-grab active:cursor-grabbing"
+          className={`relative h-[clamp(360px,72svh,760px)] w-full select-none overflow-hidden rounded-xl bg-surface-container-low touch-none overscroll-none ${
+            selectedShop ? "cursor-default" : "cursor-grab active:cursor-grabbing"
+          }`}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          onPointerCancel={() => setIsDragging(false)}
-          onPointerLeave={() => setIsDragging(false)}
+          onPointerCancel={handlePointerUp}
+          onPointerLeave={() => {
+            if (pointerStateRef.current.moved) {
+              setIsDragging(false);
+            }
+          }}
         >
           <div
             className="absolute right-4 top-4 z-30 flex flex-col gap-2"
@@ -203,7 +317,9 @@ export function MallMap() {
           </div>
 
           <div
-            className="absolute left-0 top-0 select-none rounded-xl border border-outline-variant/30 bg-white"
+            className={`absolute left-0 top-0 select-none rounded-xl border border-outline-variant/30 bg-white ${
+              selectedShop ? "pointer-events-none" : ""
+            }`}
             style={{
               width: MAP_WIDTH,
               height: MAP_HEIGHT,
@@ -240,18 +356,13 @@ export function MallMap() {
                 return (
                   <g
                     key={room.id}
-                    onPointerDown={(event) => {
-                      if (isOccupied) {
-                        event.stopPropagation();
-                      }
-                    }}
+                    data-room-id={room.id}
                     onMouseEnter={() => setHoveredRoomId(room.id)}
                     onMouseLeave={() =>
                       setHoveredRoomId((prev) =>
                         prev === room.id ? null : prev,
                       )
                     }
-                    onClick={() => handleRoomClick(room.id)}
                     className={isInteractive ? "cursor-pointer" : undefined}
                     style={{
                       transformBox: "fill-box",
@@ -385,59 +496,62 @@ export function MallMap() {
             </svg>
           </div>
 
-          {selectedShop && selectedRoom && selectedRoomBounds ? (
+          {selectedShop && selectedRoom ? (
             <div
-              className="absolute z-20 w-[290px] select-none rounded-xl border border-outline-variant/30 bg-white p-4 text-left shadow-xl"
-              style={{
-                left: Math.max(
-                  12,
-                  Math.min(740, selectedRoomBounds.centerX * zoom + pan.x + 10),
-                ),
-                top: Math.max(
-                  12,
-                  Math.min(530, selectedRoomBounds.centerY * zoom + pan.y + 10),
-                ),
-                animation: "mall-map-card-enter 220ms cubic-bezier(0.22, 1, 0.36, 1)",
-              }}
-              onPointerDown={(event) => event.stopPropagation()}
-              onClick={(event) => event.stopPropagation()}
+              className="absolute inset-0 z-40 flex items-center justify-center bg-[rgba(252,249,248,0.48)] p-4 backdrop-blur-md sm:p-6"
+              onClick={() => setSelectedRoomId(null)}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-primary">
-                    {selectedRoom.roomNumber}
-                  </p>
-                  <h3 className="mt-2 text-lg font-black">{selectedShop.name}</h3>
+              <div
+                className="w-full max-w-md rounded-[1.75rem] border border-white/70 bg-white/96 p-5 text-left shadow-2xl sm:p-6"
+                style={{
+                  animation: "mall-map-card-enter 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                      {selectedRoom.roomNumber}
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black text-on-surface">
+                      {selectedShop.name}
+                    </h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRoomId(null)}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface text-on-surface-variant transition-all hover:scale-105 hover:text-on-surface"
+                    aria-label="Close shop card"
+                  >
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
                 </div>
+
+                <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-on-surface-variant">
+                  {selectedShop.category}
+                </p>
+                <p className="mt-4 text-sm leading-6 text-on-surface-variant">
+                  {selectedShop.description}
+                </p>
+
+                <div className="mt-5 space-y-2 rounded-2xl bg-surface-container-low px-4 py-3">
+                  <p className="text-sm text-on-surface">
+                    <span className="font-bold">Время работы:</span> {selectedShop.workHours}
+                  </p>
+                  <p className="text-sm text-on-surface">
+                    <span className="font-bold">Телефон:</span> {selectedShop.phone}
+                  </p>
+                </div>
+
                 <button
                   type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setSelectedRoomId(null);
-                  }}
-                  className="h-8 w-8 rounded-full bg-surface text-on-surface-variant transition-all hover:scale-105 hover:text-on-surface"
-                  aria-label="Close shop card"
+                  onClick={() => router.push(`/shops/${selectedShop.slug}`)}
+                  className="mt-5 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
                 >
-                  ×
+                  Подробнее
                 </button>
               </div>
-              <p className="mt-2 text-sm text-on-surface-variant">
-                {selectedShop.category}
-              </p>
-              <p className="mt-3 text-sm text-on-surface">{selectedShop.workHours}</p>
-              <p className="mt-1 text-sm text-on-surface-variant">
-                {selectedShop.phone}
-              </p>
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  router.push(`/shops/${selectedShop.slug}`);
-                }}
-                className="mt-4 inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
-              >
-                Подробнее
-              </button>
             </div>
           ) : null}
         </div>
