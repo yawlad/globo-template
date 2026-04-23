@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import {
   MAP_HEIGHT,
@@ -42,7 +42,17 @@ function getBounds(points: Point[]) {
   };
 }
 
+function getCenteredPan(viewportWidth: number, viewportHeight: number, zoom: number) {
+  return {
+    x: (viewportWidth - MAP_WIDTH * zoom) / 2,
+    y: (viewportHeight - MAP_HEIGHT * zoom) / 2,
+  };
+}
+
 export function MallMap() {
+  const MIN_ZOOM = 0.65;
+  const MAX_ZOOM = 2.3;
+  const ZOOM_STEP = 0.16;
   const router = useRouter();
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [hoveredRoomId, setHoveredRoomId] = useState<string | null>(null);
@@ -51,6 +61,13 @@ export function MallMap() {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  useLayoutEffect(() => {
+    const element = viewportRef.current;
+    if (!element) return;
+
+    setPan(getCenteredPan(element.clientWidth, element.clientHeight, 1));
+  }, []);
 
   const shopByRoomId = useMemo(
     () =>
@@ -76,31 +93,20 @@ export function MallMap() {
     return activeRoom ? [...regularRooms, activeRoom] : regularRooms;
   }, [selectedRoomId]);
 
-  useEffect(() => {
-    const element = viewportRef.current;
-    if (!element) return;
-
-    const stopPageScroll = (event: Event) => {
-      event.preventDefault();
-    };
-
-    element.addEventListener("wheel", stopPageScroll, { passive: false });
-    element.addEventListener("touchmove", stopPageScroll, { passive: false });
-
-    return () => {
-      element.removeEventListener("wheel", stopPageScroll);
-      element.removeEventListener("touchmove", stopPageScroll);
-    };
-  }, []);
-
-  function handleWheel(event: React.WheelEvent<HTMLDivElement>) {
-    event.preventDefault();
-    event.stopPropagation();
-    const delta = event.deltaY > 0 ? -0.08 : 0.08;
-    setZoom((prev) => Math.max(0.65, Math.min(2.3, prev + delta)));
+  function updateZoom(direction: "in" | "out") {
+    setZoom((prev) =>
+      Math.max(
+        MIN_ZOOM,
+        Math.min(
+          MAX_ZOOM,
+          prev + (direction === "in" ? ZOOM_STEP : -ZOOM_STEP),
+        ),
+      ),
+    );
   }
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (!event.isPrimary) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     setIsDragging(true);
     setDragStart({ x: event.clientX - pan.x, y: event.clientY - pan.y });
@@ -133,8 +139,8 @@ export function MallMap() {
         <p className="inline-flex items-center gap-2 rounded-full bg-primary-fixed px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-on-secondary-fixed-variant">
           Floor Plan
         </p>
-        <h1 className="mt-5 text-4xl font-black tracking-tight md:text-6xl">
-          Схема ТЦ • 0 этаж
+        <h1 className="mt-5 text-4xl font-black tracking-tight md:text-5xl">
+          Схема ТЦ
         </h1>
       </div>
 
@@ -165,12 +171,37 @@ export function MallMap() {
         <div
           ref={viewportRef}
           className="relative h-[520px] w-full select-none overflow-hidden rounded-xl bg-surface-container-low touch-none overscroll-none cursor-grab active:cursor-grabbing"
-          onWheelCapture={handleWheel}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          onPointerCancel={() => setIsDragging(false)}
           onPointerLeave={() => setIsDragging(false)}
         >
+          <div
+            className="absolute right-4 top-4 z-30 flex flex-col gap-2"
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => updateZoom("in")}
+              disabled={zoom >= MAX_ZOOM}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-outline-variant/30 bg-white text-xl font-bold text-on-surface shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label="Увеличить карту"
+            >
+              +
+            </button>
+            <button
+              type="button"
+              onClick={() => updateZoom("out")}
+              disabled={zoom <= MIN_ZOOM}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-outline-variant/30 bg-white text-xl font-bold text-on-surface shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label="Уменьшить карту"
+            >
+              -
+            </button>
+          </div>
+
           <div
             className="absolute left-0 top-0 select-none rounded-xl border border-outline-variant/30 bg-white"
             style={{

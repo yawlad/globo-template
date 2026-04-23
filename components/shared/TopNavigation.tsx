@@ -43,7 +43,7 @@ export function TopNavigation() {
         <div className="relative p-2">
           <button
             type="button"
-            onPointerUp={() => setIsScheduleOpen((prev) => !prev)}
+            onClick={() => setIsScheduleOpen((prev) => !prev)}
             className="flex items-center gap-1 font-medium cursor-pointer min-h-11 px-2 rounded-lg touch-manipulation select-none"
             aria-expanded={isScheduleOpen}
             aria-controls="schedule-menu"

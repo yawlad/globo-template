@@ -9,8 +9,8 @@ export type Room = {
   points: Point[];
 };
 
-export const MAP_WIDTH = 620.8;
-export const MAP_HEIGHT = 508.4;
+export const MAP_WIDTH = 640;
+export const MAP_HEIGHT = 510;
 
 export const rooms: Room[] = [
   {
