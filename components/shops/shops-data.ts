@@ -1,9 +1,11 @@
-export type FloorFilter = "0" | "1" | "2" | "parking";
+import type { Room } from "@/components/map/mall-map-data";
+import type { FloorFilter } from "@/components/shops/shop-types";
 
 export type Shop = {
   id: number;
   slug: string;
   floor: FloorFilter;
+  roomId?: Room["id"];
   name: string;
   category: string;
   image: string;
@@ -25,6 +27,7 @@ export const shops: Shop[] = [
     id: 1,
     slug: "fresh-market",
     floor: "0",
+    roomId: "e-1",
     name: "Fresh Market",
     category: "Супермаркет",
     image: "/globo/image-3.jpg",
@@ -38,6 +41,7 @@ export const shops: Shop[] = [
     id: 2,
     slug: "kids-planet",
     floor: "0",
+    roomId: "e-2",
     name: "Kids Planet",
     category: "Детские товары",
     image: "/globo/image-4.jpg",
@@ -51,6 +55,7 @@ export const shops: Shop[] = [
     id: 3,
     slug: "tech-point",
     floor: "0",
+    roomId: "e-7",
     name: "Tech Point",
     category: "Электроника",
     image: "/globo/image-7.jpg",

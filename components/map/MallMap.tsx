@@ -4,280 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import {
+  MAP_HEIGHT,
+  MAP_WIDTH,
+  rooms,
+  type Point,
+} from "@/components/map/mall-map-data";
 import { floorFilters, shops } from "@/components/shops/shops-data";
-
-type Point = [number, number]; // [x, yFromBottom]
-
-type PolygonShape = {
-  id: string;
-  points: Point[];
-};
-
-type OccupiedPolygon = PolygonShape & {
-  shopSlug: string;
-};
-
-type Amenity = {
-  id: string;
-  type: "wc" | "stairs" | "elevator";
-  title: string;
-  x: number;
-  y: number; // from bottom
-};
-
-const MAP_WIDTH = 620.8;
-const MAP_HEIGHT = 508.4;
-
-const corridors: PolygonShape[] = [
-  // { id: "c-1", points: [[70, 174], [1120, 674], [1120, 602], [70, 602]] },
-  // { id: "c-2", points: [[70, 584], [300, 584], [300, 164], [70, 164]] },
-  // { id: "c-3", points: [[320, 584], [1055, 584], [1055, 524], [320, 524]] },
-  // { id: "c-4", points: [[1030, 584], [1120, 584], [1120, 164], [1030, 164]] },
-  // { id: "c-5", points: [[320, 232], [1030, 232], [1030, 164], [320, 164]] },
-];
-
-const emptyRooms: PolygonShape[] = [
-  {
-    id: "e-1",
-    points: [
-      [0, 0],
-      [0, 213],
-      [173.6, 213],
-      [173.6, 0],
-    ],
-  },
-  {
-    id: "e-2",
-    points: [
-      [212.9, 0],
-      [212.9, 316.3],
-      [685.1, 316.3],
-      [685.1, 0],
-    ],
-  },
-  {
-    id: "e-3",
-    points: [
-      [78.3, 253],
-      [78.3, 313.5],
-      [173.6, 313.5],
-      [173.6, 253],
-    ],
-  },
-  {
-    id: "e-4",
-    points: [
-      [78.3, 313.5],
-      [78.3, 373.5],
-      [55.2, 373.5],
-      [55.2, 408.5],
-      [100, 408.5],
-      [100, 383.5],
-      [173.6, 383.5],
-      [173.6, 313.5],
-    ],
-  },
-  {
-    id: "e-5",
-    points: [
-      [100, 383.5],
-      [100, 408.5],
-      [173.6, 408.5],
-      [173.6, 383.5],
-    ],
-  },
-  {
-    id: "e-6",
-    points: [
-      [0, 383.5],
-      [0, 408.5],
-      [55.2, 408.5],
-      [55.2, 383.5],
-    ],
-  },
-  {
-    id: "e-7",
-    points: [
-      [212.9, 316.3],
-      [212.9, 393.1],
-      [448.5, 393.1],
-      [448.5, 316.3],
-    ],
-  },
-  {
-    id: "e-8",
-    points: [
-      [448.5, 316.3],
-      [448.5, 393.1],
-      [561.2, 393.1],
-      [561.2, 316.3],
-    ],
-  },
-  {
-    id: "e-9",
-    points: [
-      [561.2, 316.3],
-      [561.2, 393.1],
-      [596.4, 393.1],
-      [596.4, 316.3],
-    ],
-  },
-  {
-    id: "e-10",
-    points: [
-      [596.4, 316.3],
-      [596.4, 393.1],
-      [620.8, 393.1],
-      [620.8, 316.3],
-    ],
-  },
-  {
-    id: "e-11",
-    points: [
-      [0, 437],
-      [0, 508.4],
-      [26.8, 508.4],
-      [26.8, 467.5],
-      [39, 467.5],
-      [39, 437],
-    ],
-  },
-  {
-    id: "e-12",
-    points: [
-      [39, 437],
-      [39, 467.5],
-      [26.8, 467.5],
-      [26.8, 508.4],
-      [85.2, 508.4],
-      [85.2, 437],
-    ],
-  },
-  {
-    id: "e-13",
-    points: [
-      [85.2, 437],
-      [85.2, 508.4],
-      [125.2, 508.4],
-      [125.2, 437],
-    ],
-  },
-  {
-    id: "e-14",
-    points: [
-      [125.2, 437],
-      [125.2, 508.4],
-      [151.4, 508.4],
-      [151.4, 437],
-    ],
-  },
-  {
-    id: "e-15",
-    points: [
-      [151.4, 437],
-      [151.4, 508.4],
-      [174.4, 508.4],
-      [174.4, 437],
-    ],
-  },
-  {
-    id: "e-16",
-    points: [
-      [174.4, 437],
-      [174.4, 508.4],
-      [197.4, 508.4],
-      [197.4, 437],
-    ],
-  },
-  {
-    id: "e-17",
-    points: [
-      [197.4, 437],
-      [197.4, 508.4],
-      [254.4, 508.4],
-      [254.4, 437],
-    ],
-  },
-  {
-    id: "e-18",
-    points: [
-      [254.4, 437],
-      [254.4, 508.4],
-      [314.4, 508.4],
-      [314.4, 437],
-    ],
-  },
-  {
-    id: "e-19",
-    points: [
-      [314.4, 437],
-      [314.4, 508.4],
-      [374.4, 508.4],
-      [374.4, 437],
-    ],
-  },
-  {
-    id: "e-20",
-    points: [
-      [374.4, 437],
-      [374.4, 508.4],
-      [444.4, 508.4],
-      [444.4, 437],
-    ],
-  },
-  {
-    id: "e-21",
-    points: [
-      [444.4, 437],
-      [444.4, 508.4],
-      [480.4, 508.4],
-      [480.4, 437],
-    ],
-  },{
-    id: "e-22",
-    points: [
-      [480.4, 437],
-      [480.4, 508.4],
-      [498.4, 508.4],
-      [498.4, 498.4],
-      [516.4, 498.4],
-      [516.4, 437],
-    ],
-  },
-];
-
-const occupiedRooms: OccupiedPolygon[] = [
-  // {
-  //   id: "o-1",
-  //   shopSlug: "fresh-market",
-  //   points: [[330, 458], [548, 458], [580, 404], [570, 244], [350, 244], [320, 290], [320, 430]],
-  // },
-  // {
-  //   id: "o-2",
-  //   shopSlug: "kids-planet",
-  //   points: [[590, 512], [820, 512], [820, 244], [610, 244], [580, 290], [580, 480]],
-  // },
-  // {
-  //   id: "o-3",
-  //   shopSlug: "tech-point",
-  //   points: [[840, 512], [1030, 512], [1030, 244], [860, 244], [830, 290], [830, 474]],
-  // },
-];
-
-const amenities: Amenity[] = [
-  // { id: "a-1", type: "wc", title: "Туалет", x: 134, y: 514 },
-  // { id: "a-2", type: "stairs", title: "Лестница", x: 234, y: 514 },
-  // { id: "a-3", type: "elevator", title: "Лифт", x: 134, y: 430 },
-  // { id: "a-4", type: "wc", title: "Туалет", x: 1074, y: 514 },
-  // { id: "a-5", type: "stairs", title: "Лестница", x: 1074, y: 430 },
-  // { id: "a-6", type: "elevator", title: "Лифт", x: 1074, y: 346 },
-];
-
-const amenityIcon: Record<Amenity["type"], string> = {
-  wc: "WC",
-  stairs: "ST",
-  elevator: "EL",
-};
 
 function toSvgY(yFromBottom: number) {
   return MAP_HEIGHT - yFromBottom;
@@ -314,25 +47,34 @@ export function MallMap() {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [hoveredRoomId, setHoveredRoomId] = useState<string | null>(null);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [popupConfirm, setPopupConfirm] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-  const shopBySlug = useMemo(
-    () => new Map(shops.map((shop) => [shop.slug, shop])),
+  const shopByRoomId = useMemo(
+    () =>
+      new Map(
+        shops
+          .filter((shop) => shop.roomId)
+          .map((shop) => [shop.roomId as string, shop]),
+      ),
     [],
   );
 
-  const selectedRoom =
-    occupiedRooms.find((room) => room.id === selectedRoomId) ?? null;
+  const selectedRoom = rooms.find((room) => room.id === selectedRoomId) ?? null;
   const selectedShop = selectedRoom
-    ? shopBySlug.get(selectedRoom.shopSlug)
+    ? shopByRoomId.get(selectedRoom.id) ?? null
     : null;
   const selectedRoomBounds = selectedRoom
     ? getBounds(toSvgPoints(selectedRoom.points))
     : null;
+  const orderedRooms = useMemo(() => {
+    const regularRooms = rooms.filter((room) => room.id !== selectedRoomId);
+    const activeRoom = rooms.find((room) => room.id === selectedRoomId);
+
+    return activeRoom ? [...regularRooms, activeRoom] : regularRooms;
+  }, [selectedRoomId]);
 
   useEffect(() => {
     const element = viewportRef.current;
@@ -376,32 +118,27 @@ export function MallMap() {
     setIsDragging(false);
   }
 
-  function handleOccupiedRoomClick(roomId: string) {
-    setSelectedRoomId(roomId);
-    setPopupConfirm(false);
-  }
-
-  function handlePopupClick() {
-    if (!selectedShop) return;
-    if (!popupConfirm) {
-      setPopupConfirm(true);
+  function handleRoomClick(roomId: string) {
+    if (!shopByRoomId.has(roomId)) {
+      setSelectedRoomId(null);
       return;
     }
-    router.push(`/shops/${selectedShop.slug}`);
+
+    setSelectedRoomId(roomId);
   }
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
       <div className="mb-8">
-        <p className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-fixed text-on-secondary-fixed-variant text-xs font-bold tracking-widest uppercase">
+        <p className="inline-flex items-center gap-2 rounded-full bg-primary-fixed px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-on-secondary-fixed-variant">
           Floor Plan
         </p>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight mt-5">
+        <h1 className="mt-5 text-4xl font-black tracking-tight md:text-6xl">
           Схема ТЦ • 0 этаж
         </h1>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-5">
+      <div className="mb-5 flex flex-wrap gap-2">
         {floorFilters.map((filter) => {
           const isActive = filter.key === "0";
           const isDisabled = filter.key !== "0";
@@ -411,10 +148,10 @@ export function MallMap() {
               key={filter.key}
               type="button"
               disabled={isDisabled}
-              className={`px-4 h-11 rounded-xl text-sm font-bold transition-all ${
+              className={`h-11 rounded-xl px-4 text-sm font-bold transition-all ${
                 isActive
                   ? "bg-primary text-white shadow-md"
-                  : "bg-surface text-on-surface border border-outline-variant/30 opacity-60 cursor-not-allowed"
+                  : "cursor-not-allowed border border-outline-variant/30 bg-surface text-on-surface opacity-60"
               }`}
             >
               {filter.label}
@@ -427,7 +164,7 @@ export function MallMap() {
       <div className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-3 md:p-4">
         <div
           ref={viewportRef}
-          className="relative w-full h-[520px] md:h-[660px] rounded-xl overflow-hidden bg-surface-container-low cursor-grab active:cursor-grabbing touch-none overscroll-none"
+          className="relative h-[520px] w-full select-none overflow-hidden rounded-xl bg-surface-container-low touch-none overscroll-none cursor-grab active:cursor-grabbing"
           onWheelCapture={handleWheel}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -435,130 +172,191 @@ export function MallMap() {
           onPointerLeave={() => setIsDragging(false)}
         >
           <div
-            className="absolute left-0 top-0 border border-outline-variant/30 bg-white rounded-xl"
+            className="absolute left-0 top-0 select-none rounded-xl border border-outline-variant/30 bg-white"
             style={{
               width: MAP_WIDTH,
               height: MAP_HEIGHT,
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
               transformOrigin: "0 0",
+              transition: isDragging
+                ? "none"
+                : "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           >
             <svg
               viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
               width={MAP_WIDTH}
               height={MAP_HEIGHT}
-              className="block"
+              className="block select-none"
             >
-              {/* <text x={24} y={38} fill="#1c1b1b" fontSize={32} fontWeight={900}>
-                GLOBO • Схема 0 этажа
-              </text> */}
-
-              {corridors.map((corridor) => (
-                <polygon
-                  key={corridor.id}
-                  points={pointsToString(toSvgPoints(corridor.points))}
-                  fill="#f6f3f2"
-                  stroke="#e4beb9"
-                  strokeWidth={2}
-                />
-              ))}
-
-              {emptyRooms.map((room) => (
-                <polygon
-                  key={room.id}
-                  points={pointsToString(toSvgPoints(room.points))}
-                  fill="#d1d5db"
-                  stroke="#9ca3af"
-                  strokeWidth={1.5}
-                />
-              ))}
-
-              {occupiedRooms.map((room) => {
-                const shop = shopBySlug.get(room.shopSlug);
-                if (!shop) return null;
-
+              {orderedRooms.map((room) => {
+                const shop = shopByRoomId.get(room.id);
                 const svgPoints = toSvgPoints(room.points);
                 const bounds = getBounds(svgPoints);
                 const isHovered = room.id === hoveredRoomId;
                 const isSelected = room.id === selectedRoomId;
+                const isOccupied = Boolean(shop);
+                const isInteractive = isOccupied;
+                const shouldLift = isHovered || isSelected;
+                const logoSize = Math.max(
+                  24,
+                  Math.min(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY) *
+                    0.38,
+                );
+                const logoBoxSize = logoSize + 16;
+                const roomLabelY = bounds.maxY - 10;
 
                 return (
                   <g
                     key={room.id}
+                    onPointerDown={(event) => {
+                      if (isOccupied) {
+                        event.stopPropagation();
+                      }
+                    }}
                     onMouseEnter={() => setHoveredRoomId(room.id)}
                     onMouseLeave={() =>
                       setHoveredRoomId((prev) =>
                         prev === room.id ? null : prev,
                       )
                     }
-                    onClick={() => handleOccupiedRoomClick(room.id)}
-                    className="cursor-pointer"
+                    onClick={() => handleRoomClick(room.id)}
+                    className={isInteractive ? "cursor-pointer" : undefined}
+                    style={{
+                      transformBox: "fill-box",
+                      transformOrigin: "center",
+                      transform: shouldLift ? "translateY(-3px)" : "translateY(0)",
+                      transition:
+                        "transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
+                    }}
                   >
+                    {isSelected ? (
+                      <polygon
+                        points={pointsToString(svgPoints)}
+                        fill="#f59e0b"
+                        opacity={0.2}
+                        stroke="#f97316"
+                        strokeWidth={10}
+                        strokeLinejoin="round"
+                      />
+                    ) : null}
                     <polygon
                       points={pointsToString(svgPoints)}
-                      fill={isHovered || isSelected ? "#ea8b09" : "#f59e0b"}
-                      stroke={isSelected ? "#bb171c" : "#d97706"}
-                      strokeWidth={isSelected ? 3 : 2}
+                      fill={
+                        isOccupied
+                          ? isHovered || isSelected
+                            ? "#f3b44c"
+                            : "#f59e0b"
+                          : "#d1d5db"
+                      }
+                      stroke={
+                        isOccupied
+                          ? isSelected
+                            ? "#bb171c"
+                            : "#d97706"
+                          : "#9ca3af"
+                      }
+                      strokeWidth={isOccupied && isSelected ? 3 : 1.5}
+                      strokeLinejoin="round"
+                      style={{
+                        transition:
+                          "fill 220ms ease, stroke 220ms ease, stroke-width 220ms ease, opacity 220ms ease",
+                      }}
                     />
-                    <circle
-                      cx={bounds.centerX}
-                      cy={bounds.centerY - 10}
-                      r={28}
-                      fill="white"
-                      opacity={0.96}
-                    />
-                    <image
-                      href={shop.logoImage}
-                      x={bounds.centerX - 20}
-                      y={bounds.centerY - 30}
-                      width={40}
-                      height={40}
-                      preserveAspectRatio="xMidYMid slice"
+                    {isSelected ? (
+                      <polygon
+                        points={pointsToString(svgPoints)}
+                        fill="none"
+                        stroke="#fff3e0"
+                        strokeWidth={1.5}
+                        strokeLinejoin="round"
+                        opacity={0.95}
+                        style={{ pointerEvents: "none" }}
+                      />
+                    ) : null}
+                    {isHovered && !isSelected && isOccupied ? (
+                      <polygon
+                        points={pointsToString(svgPoints)}
+                        fill="none"
+                        stroke="#fde68a"
+                        strokeWidth={1.25}
+                        strokeLinejoin="round"
+                        opacity={0.95}
+                        style={{ pointerEvents: "none" }}
+                      />
+                    ) : null}
+                    <polygon
+                      points={pointsToString(svgPoints)}
+                      fill={isSelected ? "rgba(255,255,255,0.08)" : "transparent"}
+                      style={{
+                        pointerEvents: "none",
+                        transition: "fill 220ms ease",
+                      }}
                     />
                     <text
-                      x={bounds.centerX}
-                      y={bounds.centerY + 34}
-                      textAnchor="middle"
-                      fill="#ffffff"
-                      fontSize={13}
-                      fontWeight={800}
+                      x={bounds.minX + 8}
+                      y={Math.min(bounds.centerY + 6, roomLabelY)}
+                      fill={isOccupied ? "#ffffff" : "#4b5563"}
+                      fontSize={10}
+                      fontWeight={700}
+                      style={{
+                        pointerEvents: "none",
+                        transition: "fill 220ms ease, opacity 220ms ease",
+                      }}
                     >
-                      {shop.name}
+                      {room.roomNumber}
                     </text>
+                    {shop ? (
+                      <g
+                        style={{
+                          transformBox: "fill-box",
+                          transformOrigin: "center",
+                          transform: isSelected
+                            ? "scale(1.05)"
+                            : isHovered
+                              ? "scale(1.02)"
+                              : "scale(1)",
+                          transition:
+                            "transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
+                        }}
+                      >
+                        <rect
+                          x={bounds.centerX - logoBoxSize / 2}
+                          y={bounds.centerY - logoBoxSize / 2}
+                          width={logoBoxSize}
+                          height={logoBoxSize}
+                          rx={12}
+                          fill="#ffffff"
+                          opacity={isSelected ? 1 : 0.97}
+                          style={{
+                            transition:
+                              "opacity 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                          }}
+                        />
+                        <image
+                          href={shop.logoImage}
+                          x={bounds.centerX - logoSize / 2}
+                          y={bounds.centerY - logoSize / 2}
+                          width={logoSize}
+                          height={logoSize}
+                          preserveAspectRatio="xMidYMid contain"
+                          style={{
+                            opacity: isSelected ? 1 : 0.94,
+                            transition:
+                              "opacity 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                          }}
+                        />
+                      </g>
+                    ) : null}
                   </g>
                 );
               })}
-
-              {amenities.map((item) => (
-                <g key={item.id}>
-                  <circle
-                    cx={item.x}
-                    cy={toSvgY(item.y)}
-                    r={26}
-                    fill="#ffffff"
-                    stroke="#e4beb9"
-                    strokeWidth={2}
-                  />
-                  <text
-                    x={item.x}
-                    y={toSvgY(item.y) + 6}
-                    textAnchor="middle"
-                    fill="#5b403d"
-                    fontSize={11}
-                    fontWeight={700}
-                  >
-                    {amenityIcon[item.type]}
-                  </text>
-                </g>
-              ))}
             </svg>
           </div>
 
-          {selectedShop && selectedRoomBounds && (
-            <button
-              type="button"
-              onClick={handlePopupClick}
-              className="absolute z-20 w-[290px] rounded-xl border border-outline-variant/30 bg-white p-4 text-left shadow-xl hover:shadow-2xl transition-shadow"
+          {selectedShop && selectedRoom && selectedRoomBounds ? (
+            <div
+              className="absolute z-20 w-[290px] select-none rounded-xl border border-outline-variant/30 bg-white p-4 text-left shadow-xl"
               style={{
                 left: Math.max(
                   12,
@@ -568,30 +366,70 @@ export function MallMap() {
                   12,
                   Math.min(530, selectedRoomBounds.centerY * zoom + pan.y + 10),
                 ),
+                animation: "mall-map-card-enter 220ms cubic-bezier(0.22, 1, 0.36, 1)",
               }}
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={(event) => event.stopPropagation()}
             >
-              <p className="text-xs font-bold uppercase tracking-widest text-primary">
-                0 этаж
-              </p>
-              <h3 className="text-lg font-black mt-2">{selectedShop.name}</h3>
-              <p className="text-sm text-on-surface-variant mt-1">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                    {selectedRoom.roomNumber}
+                  </p>
+                  <h3 className="mt-2 text-lg font-black">{selectedShop.name}</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setSelectedRoomId(null);
+                  }}
+                  className="h-8 w-8 rounded-full bg-surface text-on-surface-variant transition-all hover:scale-105 hover:text-on-surface"
+                  aria-label="Close shop card"
+                >
+                  ×
+                </button>
+              </div>
+              <p className="mt-2 text-sm text-on-surface-variant">
                 {selectedShop.category}
               </p>
-              <p className="text-sm mt-3 font-bold text-primary">
-                {popupConfirm
-                  ? "Открыть страницу магазина →"
-                  : "Нажмите еще раз, чтобы открыть страницу"}
+              <p className="mt-3 text-sm text-on-surface">{selectedShop.workHours}</p>
+              <p className="mt-1 text-sm text-on-surface-variant">
+                {selectedShop.phone}
               </p>
-            </button>
-          )}
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  router.push(`/shops/${selectedShop.slug}`);
+                }}
+                className="mt-4 inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
+              >
+                Подробнее
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
 
       <div className="mt-4 text-sm text-on-surface-variant">
-        <Link href="/shops" className="hover:text-primary transition-colors">
+        <Link href="/shops" className="transition-colors hover:text-primary">
           Перейти к списку магазинов →
         </Link>
       </div>
+
+      <style jsx>{`
+        @keyframes mall-map-card-enter {
+          from {
+            opacity: 0;
+            transform: translateY(14px) scale(0.96);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </section>
   );
 }

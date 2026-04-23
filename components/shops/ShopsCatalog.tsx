@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { floorFilters, shops, type FloorFilter } from "@/components/shops/shops-data";
+import { floorFilters, shops } from "@/components/shops/shops-data";
+import type { FloorFilter } from "@/components/shops/shop-types";
 
 export function ShopsCatalog() {
   const [query, setQuery] = useState("");
