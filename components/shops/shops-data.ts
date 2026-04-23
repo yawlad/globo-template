@@ -182,6 +182,20 @@ export const shops: Shop[] = [
     description:
       "Drive Coffee - точка кофе и быстрых перекусов на выезде с паркинга.",
   },
+  {
+    id: 13,
+    slug: "yum-yum",
+    floor: "0",
+    roomId: "e-18",
+    name: "Yum Yum",
+    category: "Магазин вкусняшек",
+    image: "/globo/yum-yum.png",
+    logoImage: "/globo/yum-yum.png",
+    phone: "+375 (29) 129-86-65",
+    workHours: "10:00 - 20:00 ежедневно",
+    description:
+      "Yum Yum - магазин вкусняшек на цокольном этаже.",
+  },
 ];
 
 export function getShopBySlug(slug: string) {
