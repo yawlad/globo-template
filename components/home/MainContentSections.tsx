@@ -67,19 +67,19 @@ export function MainContentSections() {
             alt="Coffee"
             className="w-16 h-16 rounded-full border-4 border-surface shadow-md object-cover"
             data-alt="close-up of a steaming latte art in a white ceramic cup on a wooden table"
-            src="/globo/image-2.jpg"
+            src="/media/shops/fresh-market-logo.jpg"
           />
           <img
             alt="Food"
             className="w-16 h-16 rounded-full border-4 border-surface shadow-md object-cover"
             data-alt="a plate of artisanal gourmet burgers and crispy fries served in a trendy modern restaurant"
-            src="/globo/image-3.jpg"
+            src="/media/shops/fresh-market-cover.jpg"
           />
           <img
             alt="Dessert"
             className="w-16 h-16 rounded-full border-4 border-surface shadow-md object-cover"
             data-alt="assorted elegant pastries and desserts displayed in a luxury bakery window case"
-            src="/globo/image-4.jpg"
+            src="/media/shops/kids-planet-cover.jpg"
           />
           <div className="w-16 h-16 rounded-full border-4 border-surface shadow-md bg-primary-container flex items-center justify-center text-white font-bold">
             +12
@@ -111,7 +111,7 @@ export function MainContentSections() {
             alt="Fashion Brand"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             data-alt="High fashion clothing store display featuring minimalist mannequins in stylish autumn outfits with professional spotlighting"
-            src="/globo/image-5.jpg"
+            src="/media/shops/premium-fashion-cover.jpg"
           />
         </div>
         <p className="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">
@@ -127,7 +127,7 @@ export function MainContentSections() {
             alt="Beauty Store"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             data-alt="Aesthetic beauty counter with high-end skincare bottles arranged elegantly on a glass shelf with soft ambient lighting"
-            src="/globo/image-6.jpg"
+            src="/media/shops/glow-aesthetics-cover.jpg"
           />
         </div>
         <p className="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">
@@ -143,7 +143,7 @@ export function MainContentSections() {
             alt="Shoes Shop"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             data-alt="Modern sneaker wall featuring vibrant red and white athletic shoes on clean white floating shelves in a minimal store"
-            src="/globo/image-7.jpg"
+            src="/media/shops/tech-point-cover.jpg"
           />
         </div>
         <p className="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">
@@ -159,7 +159,7 @@ export function MainContentSections() {
             alt="Watch Store"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             data-alt="Luxury watches displayed in a glass mahogany case under warm dramatic lighting, highlighting metallic and leather details"
-            src="/globo/image-8.jpg"
+            src="/media/shops/chronos-luxury-cover.jpg"
           />
         </div>
         <p className="text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-1">
@@ -192,7 +192,7 @@ export function MainContentSections() {
             alt="Woman with shopping bags"
             className="rounded-2xl"
             data-alt="A stylish woman laughing and carrying several colorful luxury shopping bags in a sun-drenched upscale city district"
-            src="/globo/image-9.jpg"
+            src="/media/home/sale-campaign.jpg"
           />
         </div>
       </div>
@@ -217,7 +217,7 @@ export function MainContentSections() {
             alt="Bowling"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             data-alt="vibrant neon interior of a bowling alley with illuminated lanes and glowing bowling balls"
-            src="/globo/image-10.jpg"
+            src="/media/home/event-bowling.jpg"
           />
         </div>
         <time className="text-sm font-bold text-primary mb-2 block">
@@ -237,7 +237,7 @@ export function MainContentSections() {
             alt="Bakery"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             data-alt="close-up of colorful macarons in a fancy pink box on a white marble surface"
-            src="/globo/image-11.jpg"
+            src="/media/home/event-desserts.jpg"
           />
         </div>
         <time className="text-sm font-bold text-primary mb-2 block">
@@ -257,7 +257,7 @@ export function MainContentSections() {
             alt="Style"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             data-alt="elegant evening dresses on gold racks in a brightly lit fashion showroom"
-            src="/globo/image-12.jpg"
+            src="/media/home/event-fashion.jpg"
           />
         </div>
         <time className="text-sm font-bold text-primary mb-2 block">
@@ -323,7 +323,7 @@ export function MainContentSections() {
         className="w-full h-full object-cover"
         data-alt="Stylized top-down street map view with clean minimalist design and a red marker pin on a specific building"
         data-location="Minsk"
-        src="/globo/image-13.jpg"
+        src="/media/home/location-map.jpg"
       />
       <div className="absolute inset-0 bg-primary/10 pointer-events-none"></div>
     </div>

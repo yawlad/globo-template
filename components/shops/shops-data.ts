@@ -2,17 +2,17 @@ import type { Room } from "@/components/map/mall-map-data";
 import type { FloorFilter } from "@/components/shops/shop-types";
 
 export type Shop = {
-  id: number;
-  slug: string;
-  floor: FloorFilter;
-  roomId?: Room["id"];
-  name: string;
   category: string;
+  description: string;
+  floor: FloorFilter;
+  id: number;
   image: string;
   logoImage: string;
+  name: string;
   phone: string;
+  roomId?: Room["id"];
+  slug: string;
   workHours: string;
-  description: string;
 };
 
 export const floorFilters: Array<{ key: FloorFilter; label: string }> = [
@@ -30,8 +30,8 @@ export const shops: Shop[] = [
     roomId: "e-1",
     name: "Fresh Market",
     category: "Супермаркет",
-    image: "/globo/image-3.jpg",
-    logoImage: "/globo/image-2.jpg",
+    image: "/media/shops/fresh-market-cover.jpg",
+    logoImage: "/media/shops/fresh-market-logo.jpg",
     phone: "+375 (29) 101-10-10",
     workHours: "09:00 - 21:00 ежедневно",
     description:
@@ -44,8 +44,8 @@ export const shops: Shop[] = [
     roomId: "e-2",
     name: "Kids Planet",
     category: "Детские товары",
-    image: "/globo/image-4.jpg",
-    logoImage: "/globo/image-4.jpg",
+    image: "/media/shops/kids-planet-cover.jpg",
+    logoImage: "/media/shops/kids-planet-cover.jpg",
     phone: "+375 (29) 202-20-20",
     workHours: "09:00 - 21:00 ежедневно",
     description:
@@ -58,8 +58,8 @@ export const shops: Shop[] = [
     roomId: "e-7",
     name: "Tech Point",
     category: "Электроника",
-    image: "/globo/image-7.jpg",
-    logoImage: "/globo/image-7.jpg",
+    image: "/media/shops/tech-point-cover.jpg",
+    logoImage: "/media/shops/tech-point-cover.jpg",
     phone: "+375 (29) 303-30-30",
     workHours: "10:00 - 21:00 ежедневно",
     description:
@@ -71,8 +71,8 @@ export const shops: Shop[] = [
     floor: "1",
     name: "Premium Fashion",
     category: "Одежда и стиль",
-    image: "/globo/image-5.jpg",
-    logoImage: "/globo/image-5.jpg",
+    image: "/media/shops/premium-fashion-cover.jpg",
+    logoImage: "/media/shops/premium-fashion-cover.jpg",
     phone: "+375 (29) 404-40-40",
     workHours: "10:00 - 23:00 ежедневно",
     description:
@@ -84,8 +84,8 @@ export const shops: Shop[] = [
     floor: "1",
     name: "Glow Aesthetics",
     category: "Красота и уход",
-    image: "/globo/image-6.jpg",
-    logoImage: "/globo/image-6.jpg",
+    image: "/media/shops/glow-aesthetics-cover.jpg",
+    logoImage: "/media/shops/glow-aesthetics-cover.jpg",
     phone: "+375 (29) 505-50-50",
     workHours: "10:00 - 23:00 ежедневно",
     description:
@@ -97,8 +97,8 @@ export const shops: Shop[] = [
     floor: "1",
     name: "Chronos Luxury",
     category: "Аксессуары",
-    image: "/globo/image-8.jpg",
-    logoImage: "/globo/image-8.jpg",
+    image: "/media/shops/chronos-luxury-cover.jpg",
+    logoImage: "/media/shops/chronos-luxury-cover.jpg",
     phone: "+375 (29) 606-60-60",
     workHours: "10:00 - 23:00 ежедневно",
     description:
@@ -110,8 +110,8 @@ export const shops: Shop[] = [
     floor: "2",
     name: "Cinema Zone",
     category: "Развлечения",
-    image: "/globo/image-10.jpg",
-    logoImage: "/globo/image-10.jpg",
+    image: "/media/home/event-bowling.jpg",
+    logoImage: "/media/home/event-bowling.jpg",
     phone: "+375 (29) 707-70-70",
     workHours: "10:00 - 22:00 ежедневно",
     description:
@@ -123,8 +123,8 @@ export const shops: Shop[] = [
     floor: "2",
     name: "Food Hall",
     category: "Фудкорт",
-    image: "/globo/image-11.jpg",
-    logoImage: "/globo/image-11.jpg",
+    image: "/media/home/event-desserts.jpg",
+    logoImage: "/media/home/event-desserts.jpg",
     phone: "+375 (29) 808-80-80",
     workHours: "10:00 - 22:00 ежедневно",
     description:
@@ -136,8 +136,8 @@ export const shops: Shop[] = [
     floor: "2",
     name: "Bowling Club",
     category: "Активный отдых",
-    image: "/globo/image-12.jpg",
-    logoImage: "/globo/image-12.jpg",
+    image: "/media/home/event-fashion.jpg",
+    logoImage: "/media/home/event-fashion.jpg",
     phone: "+375 (29) 909-90-90",
     workHours: "10:00 - 22:00 ежедневно",
     description:
@@ -149,8 +149,8 @@ export const shops: Shop[] = [
     floor: "parking",
     name: "Car Wash Express",
     category: "Автосервис",
-    image: "/globo/image-13.jpg",
-    logoImage: "/globo/image-13.jpg",
+    image: "/media/home/location-map.jpg",
+    logoImage: "/media/home/location-map.jpg",
     phone: "+375 (29) 010-10-10",
     workHours: "Круглосуточно",
     description:
@@ -162,8 +162,8 @@ export const shops: Shop[] = [
     floor: "parking",
     name: "Auto Details",
     category: "Шиномонтаж",
-    image: "/globo/image-9.jpg",
-    logoImage: "/globo/image-9.jpg",
+    image: "/media/home/sale-campaign.jpg",
+    logoImage: "/media/home/sale-campaign.jpg",
     phone: "+375 (29) 111-11-11",
     workHours: "Круглосуточно",
     description:
@@ -175,8 +175,8 @@ export const shops: Shop[] = [
     floor: "parking",
     name: "Drive Coffee",
     category: "Кофе с собой",
-    image: "/globo/image-2.jpg",
-    logoImage: "/globo/image-2.jpg",
+    image: "/media/shops/fresh-market-logo.jpg",
+    logoImage: "/media/shops/fresh-market-logo.jpg",
     phone: "+375 (29) 212-12-12",
     workHours: "Круглосуточно",
     description:
@@ -189,12 +189,11 @@ export const shops: Shop[] = [
     roomId: "e-18",
     name: "Yum Yum",
     category: "Магазин вкусняшек",
-    image: "/globo/yum-yum.png",
-    logoImage: "/globo/yum-yum.png",
+    image: "/media/shops/yum-yum-logo.png",
+    logoImage: "/media/shops/yum-yum-logo.png",
     phone: "+375 (29) 129-86-65",
     workHours: "10:00 - 20:00 ежедневно",
-    description:
-      "Yum Yum - магазин вкусняшек на цокольном этаже.",
+    description: "Yum Yum - магазин вкусняшек на цокольном этаже.",
   },
 ];
 

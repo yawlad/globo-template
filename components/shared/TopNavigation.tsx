@@ -12,6 +12,7 @@ const scheduleItems = [
 
 const navigationLinks = [
   { href: "/shops", label: "Магазины" },
+  { href: "/rentals", label: "Арендаторам" },
   { href: "/map", label: "Схема центра" },
   { href: "#", label: "Новости" },
   { href: "#", label: "Контакты" },
@@ -49,7 +50,7 @@ export function TopNavigation() {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full bg-white/70 backdrop-blur-xl shadow-[0px_10px_30px_rgba(183,19,26,0.06)]">
+      <nav className="fixed top-0 z-50 w-full bg-white/70 shadow-[0px_10px_30px_rgba(183,19,26,0.06)] backdrop-blur-xl">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-8">
           <Link href="/" className="text-2xl font-black tracking-tighter text-red-600">
             GLOBO

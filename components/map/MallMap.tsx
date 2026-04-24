@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import {
+  MAP_BASE_HEIGHT,
+  MAP_PADDING,
   MAP_HEIGHT,
   MAP_WIDTH,
   rooms,
   type Point,
+  type RoomMarkerPlacement,
 } from "@/components/map/mall-map-data";
 import {
   rentalSpaces,
@@ -62,11 +65,11 @@ const INITIAL_POINTER_STATE: PointerState = {
 };
 
 function toSvgY(yFromBottom: number) {
-  return MAP_HEIGHT - yFromBottom;
+  return MAP_PADDING.top + (MAP_BASE_HEIGHT - yFromBottom);
 }
 
 function toSvgPoints(points: Point[]) {
-  return points.map(([x, y]) => [x, toSvgY(y)] as Point);
+  return points.map(([x, y]) => [x + MAP_PADDING.left, toSvgY(y)] as Point);
 }
 
 function pointsToString(points: Point[]) {
@@ -171,6 +174,14 @@ function getEntityAccent(entity: RoomEntity | null, isHovered: boolean, isSelect
     stroke: meta.color,
     glowStroke: isSelected ? hexToRgba(meta.color, 0.35) : isHovered ? hexToRgba(meta.color, 0.22) : null,
     overlayOpacity: isSelected ? 0.1 : 0,
+  };
+}
+
+function getMarkerPlacement(placement?: RoomMarkerPlacement) {
+  return {
+    offsetX: placement?.offsetX ?? 0,
+    offsetY: placement?.offsetY ?? 0,
+    scale: placement?.scale ?? 1,
   };
 }
 
@@ -449,12 +460,18 @@ export function MallMap() {
                 const isSelected = room.id === selectedRoomId;
                 const isInteractive = Boolean(entity);
                 const accent = getEntityAccent(entity, isHovered, isSelected);
-                const logoSize = Math.max(
+                const markerPlacement = getMarkerPlacement(room.markerPlacement);
+                const markerCenterX = bounds.centerX + markerPlacement.offsetX;
+                const markerCenterY = bounds.centerY + markerPlacement.offsetY;
+                const markerScale = Math.max(0.25, markerPlacement.scale);
+                const baseMarkerSize = Math.max(
                   24,
                   Math.min(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY) *
                     0.38,
                 );
-                const logoBoxSize = logoSize + 16;
+                const markerSize = baseMarkerSize * markerScale;
+                const logoBoxSize = markerSize + 16 * markerScale;
+                const symbolFontSize = Math.max(14, 22 * markerScale);
 
                 return (
                   <g
@@ -540,8 +557,8 @@ export function MallMap() {
                         }}
                       >
                         <rect
-                          x={bounds.centerX - logoBoxSize / 2}
-                          y={bounds.centerY - logoBoxSize / 2}
+                          x={markerCenterX - logoBoxSize / 2}
+                          y={markerCenterY - logoBoxSize / 2}
                           width={logoBoxSize}
                           height={logoBoxSize}
                           rx={12}
@@ -550,10 +567,10 @@ export function MallMap() {
                         />
                         <image
                           href={entity.value.logoImage}
-                          x={bounds.centerX - logoSize / 2}
-                          y={bounds.centerY - logoSize / 2}
-                          width={logoSize}
-                          height={logoSize}
+                          x={markerCenterX - markerSize / 2}
+                          y={markerCenterY - markerSize / 2}
+                          width={markerSize}
+                          height={markerSize}
                           preserveAspectRatio="xMidYMid contain"
                           style={{ opacity: isSelected ? 1 : 0.94 }}
                         />
@@ -562,12 +579,12 @@ export function MallMap() {
                     {entity?.type === "rental" ? (
                       <g style={{ pointerEvents: "none" }}>
                         <text
-                          x={bounds.centerX}
-                          y={bounds.centerY + 6}
+                          x={markerCenterX}
+                          y={markerCenterY + symbolFontSize * 0.27}
                           textAnchor="middle"
                           fill="#1d4f91"
                           fontFamily="Material Symbols Outlined"
-                          fontSize={22}
+                          fontSize={symbolFontSize}
                           fontWeight={800}
                         >
                           domain
@@ -578,12 +595,12 @@ export function MallMap() {
                       <g style={{ pointerEvents: "none" }}>
                         {technicalSpaceTypeMeta[entity.value.type].icon ? (
                           <text
-                            x={bounds.centerX}
-                            y={bounds.centerY + 6}
+                            x={markerCenterX}
+                            y={markerCenterY + symbolFontSize * 0.27}
                             fill={technicalSpaceTypeMeta[entity.value.type].color}
                             fontFamily="Material Symbols Outlined"
                             textAnchor="middle"
-                            fontSize={22}
+                            fontSize={symbolFontSize}
                             fontWeight={700}
                           >
                             {technicalSpaceTypeMeta[entity.value.type].icon}

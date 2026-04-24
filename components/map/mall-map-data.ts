@@ -2,19 +2,44 @@ import type { FloorFilter } from "@/components/shops/shop-types";
 
 export type Point = [number, number];
 
+export type RoomMarkerPlacement = {
+  offsetX?: number;
+  offsetY?: number;
+  scale?: number;
+};
+
+export type MapCanvasPadding = {
+  bottom: number;
+  left: number;
+  right: number;
+  top: number;
+};
+
 export type Room = {
   id: string;
+  markerPlacement?: RoomMarkerPlacement;
   roomNumber: string;
   floor: FloorFilter;
   points: Point[];
 };
 
-export const MAP_WIDTH = 640;
-export const MAP_HEIGHT = 510;
+export const MAP_BASE_WIDTH = 750;
+export const MAP_BASE_HEIGHT = 560;
+
+export const MAP_PADDING: MapCanvasPadding = {
+  top: 0,
+  right: 0,
+  bottom: 50,
+  left: 50,
+};
+
+export const MAP_WIDTH = MAP_BASE_WIDTH + MAP_PADDING.left + MAP_PADDING.right;
+export const MAP_HEIGHT = MAP_BASE_HEIGHT + MAP_PADDING.top + MAP_PADDING.bottom;
 
 export const rooms: Room[] = [
   {
     id: "e-1",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-01",
     floor: "0",
     points: [
@@ -26,6 +51,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-2",
+    markerPlacement: { scale: 2 },
     roomNumber: "0-02",
     floor: "0",
     points: [
@@ -37,6 +63,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-3",
+    markerPlacement: { scale: 1, offsetY: 5  },
     roomNumber: "0-03",
     floor: "0",
     points: [
@@ -48,6 +75,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-4",
+    markerPlacement: { scale: 1, offsetX: 10, offsetY: 15 },
     roomNumber: "0-04",
     floor: "0",
     points: [
@@ -63,6 +91,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-5",
+    markerPlacement: { scale: 0.8, offsetY: 3 },
     roomNumber: "0-05",
     floor: "0",
     points: [
@@ -74,6 +103,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-6",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-06",
     floor: "0",
     points: [
@@ -85,6 +115,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-7",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-07",
     floor: "0",
     points: [
@@ -96,6 +127,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-8",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-08",
     floor: "0",
     points: [
@@ -107,6 +139,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-9",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-09",
     floor: "0",
     points: [
@@ -118,6 +151,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-10",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-10",
     floor: "0",
     points: [
@@ -129,6 +163,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-11",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-11",
     floor: "0",
     points: [
@@ -142,6 +177,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-12",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-12",
     floor: "0",
     points: [
@@ -155,6 +191,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-13",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-13",
     floor: "0",
     points: [
@@ -166,6 +203,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-14",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-14",
     floor: "0",
     points: [
@@ -177,6 +215,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-15",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-15",
     floor: "0",
     points: [
@@ -188,6 +227,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-16",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-16",
     floor: "0",
     points: [
@@ -199,6 +239,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-17",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-17",
     floor: "0",
     points: [
@@ -210,6 +251,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-18",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-18",
     floor: "0",
     points: [
@@ -221,6 +263,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-19",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-19",
     floor: "0",
     points: [
@@ -232,6 +275,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-20",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-20",
     floor: "0",
     points: [
@@ -243,6 +287,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-21",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-21",
     floor: "0",
     points: [
@@ -254,6 +299,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-22",
+    markerPlacement: { scale: 1 },
     roomNumber: "0-22",
     floor: "0",
     points: [
