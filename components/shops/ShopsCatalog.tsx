@@ -4,10 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { floorFilters, shops } from "@/components/shops/shops-data";
+import { floorFilters, type Shop } from "@/components/shops/shops-data";
 import type { FloorFilter } from "@/components/shops/shop-types";
 
-export function ShopsCatalog() {
+type ShopsCatalogProps = {
+  shops: Shop[];
+};
+
+export function ShopsCatalog({ shops }: ShopsCatalogProps) {
   const [query, setQuery] = useState("");
   const [activeFloor, setActiveFloor] = useState<FloorFilter | null>(null);
 
@@ -23,7 +27,7 @@ export function ShopsCatalog() {
 
       return floorMatch && searchMatch;
     });
-  }, [query, activeFloor]);
+  }, [query, activeFloor, shops]);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">

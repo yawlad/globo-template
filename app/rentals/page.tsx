@@ -1,6 +1,7 @@
 import { RentalsCatalog } from "@/components/rentals/RentalsCatalog";
 import { SiteFooter } from "@/components/shared/SiteFooter";
 import { TopNavigation } from "@/components/shared/TopNavigation";
+import { getSiteContent } from "@/lib/content/store";
 
 const benefits = [
   {
@@ -23,10 +24,14 @@ const benefits = [
   },
 ];
 
-export default function RentalsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function RentalsPage() {
+  const content = await getSiteContent();
+
   return (
     <>
-      <TopNavigation />
+      <TopNavigation content={content.navigation} />
       <main className="min-h-screen bg-surface pb-16 pt-28">
         <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <div className="grid gap-10 xl:grid-cols-[1.1fr_0.9fr] xl:items-end">
@@ -85,7 +90,7 @@ export default function RentalsPage() {
               </p>
             </div>
 
-            <RentalsCatalog />
+            <RentalsCatalog rentalSpaces={content.rentals} />
           </section>
         </section>
       </main>

@@ -3,22 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const scheduleItems = [
-  "Цокольный этаж 9:00 - 21:00",
-  "1 этаж 9:00 - 23:00",
-  "2 этаж 9:00 - 21:00",
-  "Паркинг круглосуточно",
-];
+import type { NavigationContent } from "@/lib/content/types";
 
-const navigationLinks = [
-  { href: "/shops", label: "Магазины" },
-  { href: "/rentals", label: "Арендаторам" },
-  { href: "/map", label: "Схема центра" },
-  { href: "#", label: "Новости" },
-  { href: "#", label: "Контакты" },
-];
+type TopNavigationProps = {
+  content: NavigationContent;
+};
 
-export function TopNavigation() {
+export function TopNavigation({ content }: TopNavigationProps) {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -57,9 +48,9 @@ export function TopNavigation() {
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
-            {navigationLinks.map((link) => (
+            {content.links.map((link) => (
               <Link
-                key={link.label}
+                key={`${link.href}-${link.label}`}
                 className="font-medium text-zinc-800 transition-colors duration-300 hover:text-red-500"
                 href={link.href}
               >
@@ -78,7 +69,7 @@ export function TopNavigation() {
                 aria-controls="schedule-menu"
               >
                 <span className="material-symbols-outlined">schedule</span>
-                Ежедневно: 10:00 - 22:00
+                {content.scheduleSummary}
                 <span
                   className={`material-symbols-outlined transition-transform duration-300 ${
                     isScheduleOpen ? "-rotate-90" : "rotate-90"
@@ -97,7 +88,7 @@ export function TopNavigation() {
                 }`}
               >
                 <ul className="space-y-2 text-sm">
-                  {scheduleItems.map((item) => (
+                  {content.scheduleItems.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
@@ -155,9 +146,9 @@ export function TopNavigation() {
           </div>
 
           <div className="mt-5 flex flex-col gap-2.5">
-            {navigationLinks.map((link) => (
+            {content.links.map((link) => (
               <Link
-                key={link.label}
+                key={`${link.href}-${link.label}-mobile`}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-xl border border-outline-variant/20 bg-white px-4 py-3 text-base font-bold text-on-surface shadow-sm transition-colors hover:text-primary"
@@ -175,15 +166,15 @@ export function TopNavigation() {
                   Режим работы
                 </p>
                 <p className="mt-0.5 text-sm font-semibold text-on-surface">
-                  Ежедневно: 10:00 - 22:00
+                  {content.scheduleSummary}
                 </p>
               </div>
             </div>
 
             <ul className="mt-4 space-y-2 text-sm text-on-surface">
-              {scheduleItems.map((item) => (
+              {content.scheduleItems.map((item) => (
                 <li
-                  key={item}
+                  key={`${item}-mobile`}
                   className="rounded-xl border border-outline-variant/15 bg-white px-3.5 py-2.5"
                 >
                   {item}

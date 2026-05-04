@@ -6,8 +6,8 @@ import { useMemo, useState } from "react";
 
 import {
   rentalOwnerLabels,
-  rentalSpaces,
   rentalTypeLabels,
+  type RentalSpace,
   type RentalSpaceType,
 } from "@/components/rentals/rentals-data";
 import type { FloorFilter } from "@/components/shops/shop-types";
@@ -51,6 +51,10 @@ type RangeInputsProps = {
   onChange: (next: RangeValue) => void;
   step?: number;
   value: RangeValue;
+};
+
+type RentalsCatalogProps = {
+  rentalSpaces: RentalSpace[];
 };
 
 function RangeInputs({
@@ -123,22 +127,22 @@ function RangeInputs({
   );
 }
 
-export function RentalsCatalog() {
+export function RentalsCatalog({ rentalSpaces }: RentalsCatalogProps) {
   const minMonthlyPrice = useMemo(
     () => Math.min(...rentalSpaces.map((rental) => rental.monthlyPrice)),
-    [],
+    [rentalSpaces],
   );
   const maxMonthlyPrice = useMemo(
     () => Math.max(...rentalSpaces.map((rental) => rental.monthlyPrice)),
-    [],
+    [rentalSpaces],
   );
   const minAreaSqm = useMemo(
     () => Math.min(...rentalSpaces.map((rental) => rental.areaSqm)),
-    [],
+    [rentalSpaces],
   );
   const maxAreaSqm = useMemo(
     () => Math.max(...rentalSpaces.map((rental) => rental.areaSqm)),
-    [],
+    [rentalSpaces],
   );
 
   const [priceRange, setPriceRange] = useState<RangeValue>({
@@ -166,7 +170,7 @@ export function RentalsCatalog() {
 
       return matchesPrice && matchesArea && matchesFloor && matchesType;
     });
-  }, [areaRange, floorFilter, priceRange, typeFilter]);
+  }, [areaRange, floorFilter, priceRange, rentalSpaces, typeFilter]);
 
   const hasActiveFilters =
     priceRange.min !== minMonthlyPrice ||

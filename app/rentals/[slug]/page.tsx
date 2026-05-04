@@ -4,25 +4,23 @@ import { notFound } from "next/navigation";
 
 import { rooms } from "@/components/map/mall-map-data";
 import {
-  getRentalBySlug,
   rentalOwnerLabels,
-  rentalSpaces,
   rentalTypeLabels,
 } from "@/components/rentals/rentals-data";
 import { SiteFooter } from "@/components/shared/SiteFooter";
 import { TopNavigation } from "@/components/shared/TopNavigation";
+import { getSiteContent } from "@/lib/content/store";
 
 type RentalPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return rentalSpaces.map((rental) => ({ slug: rental.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function RentalDetailsPage({ params }: RentalPageProps) {
   const { slug } = await params;
-  const rental = getRentalBySlug(slug);
+  const content = await getSiteContent();
+  const rental = content.rentals.find((item) => item.slug === slug);
 
   if (!rental) {
     notFound();
@@ -34,7 +32,7 @@ export default async function RentalDetailsPage({ params }: RentalPageProps) {
 
   return (
     <>
-      <TopNavigation />
+      <TopNavigation content={content.navigation} />
       <main className="min-h-screen bg-surface pb-16 pt-28">
         <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <div className="mb-8 text-sm text-on-surface-variant">

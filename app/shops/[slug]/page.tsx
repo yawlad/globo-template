@@ -2,21 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getShopBySlug, shops } from "@/components/shops/shops-data";
 import { SiteFooter } from "@/components/shared/SiteFooter";
 import { TopNavigation } from "@/components/shared/TopNavigation";
+import { getSiteContent } from "@/lib/content/store";
 
 type ShopPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return shops.map((shop) => ({ slug: shop.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function ShopDetailsPage({ params }: ShopPageProps) {
   const { slug } = await params;
-  const shop = getShopBySlug(slug);
+  const content = await getSiteContent();
+  const shop = content.shops.find((item) => item.slug === slug);
 
   if (!shop) {
     notFound();
@@ -26,7 +25,7 @@ export default async function ShopDetailsPage({ params }: ShopPageProps) {
 
   return (
     <>
-      <TopNavigation />
+      <TopNavigation content={content.navigation} />
       <main className="bg-surface min-h-screen pt-28 pb-16">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-sm text-on-surface-variant mb-8">

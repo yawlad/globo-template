@@ -14,13 +14,11 @@ import {
   type RoomMarkerPlacement,
 } from "@/components/map/mall-map-data";
 import {
-  rentalSpaces,
   rentalTypeLabels,
   type RentalSpace,
 } from "@/components/rentals/rentals-data";
-import { floorFilters, shops, type Shop } from "@/components/shops/shops-data";
+import { floorFilters, type Shop } from "@/components/shops/shops-data";
 import {
-  technicalSpaces,
   technicalSpaceTypeMeta,
   type TechnicalSpace,
 } from "@/components/technical/technical-spaces-data";
@@ -52,6 +50,12 @@ type Accent = {
   glowStroke: string | null;
   overlayOpacity: number;
   stroke: string;
+};
+
+type MallMapProps = {
+  rentalSpaces: RentalSpace[];
+  shops: Shop[];
+  technicalSpaces: TechnicalSpace[];
 };
 
 const INITIAL_POINTER_STATE: PointerState = {
@@ -185,7 +189,7 @@ function getMarkerPlacement(placement?: RoomMarkerPlacement) {
   };
 }
 
-export function MallMap() {
+export function MallMap({ shops, rentalSpaces, technicalSpaces }: MallMapProps) {
   const router = useRouter();
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const hasManualViewportChangeRef = useRef(false);
@@ -221,7 +225,7 @@ export function MallMap() {
     });
 
     return entities;
-  }, []);
+  }, [rentalSpaces, shops, technicalSpaces]);
 
   const selectedRoom = rooms.find((room) => room.id === selectedRoomId) ?? null;
   const selectedEntity = selectedRoom
