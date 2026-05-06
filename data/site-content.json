@@ -1,0 +1,428 @@
+{
+  "navigation": {
+    "scheduleSummary": "Ежедневно: 10:00 - 22:00",
+    "scheduleItems": [
+      "Цокольный этаж 9:00 - 21:00",
+      "1 этаж 9:00 - 23:00",
+      "2 этаж 10:00 - 21:00",
+      "Паркинг круглосуточно"
+    ],
+    "links": [
+      {
+        "href": "/shops",
+        "label": "Магазины"
+      },
+      {
+        "href": "/rentals",
+        "label": "Арендаторам"
+      },
+      {
+        "href": "/map",
+        "label": "Схема центра"
+      },
+      {
+        "href": "#",
+        "label": "Новости"
+      },
+      {
+        "href": "/contacts",
+        "label": "Контакты"
+      }
+    ]
+  },
+  "home": {
+    "hero": {
+      "badge": "Минск, Беларусь",
+      "exploreLabel": "Explore the pulse",
+      "highlight": "шопинга",
+      "imageAlt": "Modern architectural interior of a luxury shopping mall with glass ceilings, sunlight streaming through, and high-end storefronts in the background",
+      "imageSrc": "/media/home/hero-main.png",
+      "primaryCtaHref": "/shops",
+      "primaryCtaLabel": "Магазины",
+      "secondaryCtaHref": "/rentals",
+      "secondaryCtaLabel": "Арендаторам",
+      "title": "Globo — твой центр {highlight} и стиля"
+    },
+    "highlights": {
+      "metro": {
+        "title": "Рядом с метро",
+        "description": "Всего 2 минуты пешком от станции метро Михалово."
+      },
+      "shops": {
+        "title": "100+ Shops",
+        "description": "Мировые и локальные бренды в одном месте."
+      },
+      "parking": {
+        "title": "Free Parking",
+        "description": "Просторный паркинг для вашего комфорта."
+      },
+      "food": {
+        "title": "Cozy Cafes",
+        "description": "Идеальное место для встреч с друзьями или перерыва во время шопинга. Более 15 гастрономических точек.",
+        "extraCountLabel": "+12",
+        "avatars": [
+          "/media/shops/fresh-market-logo.jpg",
+          "/media/shops/fresh-market-cover.jpg",
+          "/media/shops/kids-planet-cover.jpg"
+        ]
+      }
+    },
+    "brands": {
+      "title": "Популярные бренды",
+      "linkHref": "/shops",
+      "linkLabel": "Все магазины →",
+      "items": [
+        {
+          "category": "Одежда & Стиль",
+          "image": "/media/shops/premium-fashion-cover.jpg",
+          "imageAlt": "High fashion clothing store display featuring minimalist mannequins in stylish autumn outfits with professional spotlighting",
+          "name": "Premium Fashion"
+        },
+        {
+          "category": "Красота",
+          "image": "/media/shops/glow-aesthetics-cover.jpg",
+          "imageAlt": "Aesthetic beauty counter with high-end skincare bottles arranged elegantly on a glass shelf with soft ambient lighting",
+          "name": "Glow Aesthetics"
+        },
+        {
+          "category": "Обувь",
+          "image": "/media/shops/tech-point-cover.jpg",
+          "imageAlt": "Modern sneaker wall featuring vibrant red and white athletic shoes on clean white floating shelves in a minimal store",
+          "name": "Stride Active"
+        },
+        {
+          "category": "Аксессуары",
+          "image": "/media/shops/chronos-luxury-cover.jpg",
+          "imageAlt": "Luxury watches displayed in a glass mahogany case under warm dramatic lighting, highlighting metallic and leather details",
+          "name": "Chronos Luxury"
+        }
+      ]
+    },
+    "promo": {
+      "title": "Сезонные скидки до -70%",
+      "description": "Не упустите возможность обновить свой гардероб по самым выгодным ценам. Только в этом месяце в Globo!",
+      "buttonLabel": "Смотреть предложения",
+      "imageSrc": "/media/home/sale-campaign.jpg",
+      "imageAlt": "A stylish woman laughing and carrying several colorful luxury shopping bags in a sun-drenched upscale city district"
+    },
+    "news": {
+      "title": "События и новости",
+      "items": [
+        {
+          "date": "12 Октября, 2024",
+          "title": "Открытие новой зоны развлечений",
+          "description": "Теперь в Globo еще больше драйва! Открылся современный боулинг-центр с неоновым освещением...",
+          "image": "/media/home/event-bowling.jpg",
+          "imageAlt": "vibrant neon interior of a bowling alley with illuminated lanes and glowing bowling balls"
+        },
+        {
+          "date": "8 Октября, 2024",
+          "title": "Фестиваль десертов в эти выходные",
+          "description": "Попробуйте лучшие десерты от шеф-кондитеров города. Мастер-классы и дегустации весь день!",
+          "image": "/media/home/event-desserts.jpg",
+          "imageAlt": "close-up of colorful macarons in a fancy pink box on a white marble surface"
+        },
+        {
+          "date": "3 Октября, 2024",
+          "title": "Fashion Week: Итоги показов",
+          "description": "Рассказываем о главных трендах сезона, которые уже можно найти в магазинах нашего центра.",
+          "image": "/media/home/event-fashion.jpg",
+          "imageAlt": "elegant evening dresses on gold racks in a brightly lit fashion showroom"
+        }
+      ]
+    },
+    "visit": {
+      "title": "Ждем вас \nв Globo",
+      "addressLabel": "Адрес",
+      "addressText": "ул. Уманская, 54, Минск, Беларусь",
+      "buttonLabel": "Построить маршрут",
+      "hoursLabel": "Режим работы",
+      "hoursText": "Ежедневно: 10:00 — 22:00",
+      "mapAlt": "Stylized top-down street map view with clean minimalist design and a red marker pin on a specific building",
+      "mapImage": "/media/home/location-map.jpg"
+    }
+  },
+  "shops": [
+    {
+      "id": 1,
+      "slug": "garage-cafe",
+      "floor": "0",
+      "roomId": "e-1",
+      "name": "GARAGE",
+      "category": "Кафе",
+      "image": "/media/shops/garage-interior.png",
+      "logoImage": "/media/shops/garage-logo.png",
+      "phone": "+375 (29) 101-10-10",
+      "workHours": "09:00 - 23:00 ежедневно",
+      "description": "GARAGE food&coffee — популярное городское кафе на 1-м этаже ТЦ «Глобо». Это идеальное место, чтобы перекусить во время покупок или встретиться с друзьями после работы. В меню собраны хиты разных кухонь мира: тонкая итальянская пицца, сочные бургеры, домашние обеды и завтраки, которые подают уже с 8 утра. Для маленьких гостей оборудован детский лабиринт, а для тех, кто спешит — действует скидка 15% на всё меню с собой."
+    },
+    {
+      "id": 2,
+      "slug": "kids-planet",
+      "floor": "0",
+      "roomId": "e-2",
+      "name": "Kids Planet",
+      "category": "Детские товары",
+      "image": "/media/shops/kids-planet-cover.jpg",
+      "logoImage": "/media/shops/kids-planet-cover.jpg",
+      "phone": "+375 (29) 202-20-20",
+      "workHours": "09:00 - 21:00 ежедневно",
+      "description": "Kids Planet - магазин детской одежды, игрушек и школьных аксессуаров для детей всех возрастов."
+    },
+    {
+      "id": 3,
+      "slug": "tech-point",
+      "floor": "0",
+      "roomId": "e-7",
+      "name": "Tech Point",
+      "category": "Электроника",
+      "image": "/media/shops/tech-point-cover.jpg",
+      "logoImage": "/media/shops/tech-point-cover.jpg",
+      "phone": "+375 (29) 303-30-30",
+      "workHours": "10:00 - 21:00 ежедневно",
+      "description": "Tech Point предлагает смартфоны, аксессуары и гаджеты с профессиональной консультацией и сервисом."
+    },
+    {
+      "id": 4,
+      "slug": "premium-fashion",
+      "floor": "1",
+      "name": "Premium Fashion",
+      "category": "Одежда и стиль",
+      "image": "/media/shops/premium-fashion-cover.jpg",
+      "logoImage": "/media/shops/premium-fashion-cover.jpg",
+      "phone": "+375 (29) 404-40-40",
+      "workHours": "10:00 - 23:00 ежедневно",
+      "description": "Premium Fashion предлагает коллекции повседневной и вечерней одежды от локальных и международных брендов."
+    },
+    {
+      "id": 5,
+      "slug": "glow-aesthetics",
+      "floor": "1",
+      "name": "Glow Aesthetics",
+      "category": "Красота и уход",
+      "image": "/media/shops/glow-aesthetics-cover.jpg",
+      "logoImage": "/media/shops/glow-aesthetics-cover.jpg",
+      "phone": "+375 (29) 505-50-50",
+      "workHours": "10:00 - 23:00 ежедневно",
+      "description": "Glow Aesthetics - косметика, уходовые средства и консультации по подбору beauty-продуктов."
+    },
+    {
+      "id": 6,
+      "slug": "chronos-luxury",
+      "floor": "1",
+      "name": "Chronos Luxury",
+      "category": "Аксессуары",
+      "image": "/media/shops/chronos-luxury-cover.jpg",
+      "logoImage": "/media/shops/chronos-luxury-cover.jpg",
+      "phone": "+375 (29) 606-60-60",
+      "workHours": "10:00 - 23:00 ежедневно",
+      "description": "Chronos Luxury специализируется на часах и статусных аксессуарах с расширенной гарантией."
+    },
+    {
+      "id": 7,
+      "slug": "cinema-zone",
+      "floor": "2",
+      "name": "Cinema Zone",
+      "category": "Развлечения",
+      "image": "/media/home/event-bowling.jpg",
+      "logoImage": "/media/home/event-bowling.jpg",
+      "phone": "+375 (29) 707-70-70",
+      "workHours": "10:00 - 22:00 ежедневно",
+      "description": "Cinema Zone - современный кинотеатр с комфортными залами, премьерами и семейными сеансами."
+    },
+    {
+      "id": 8,
+      "slug": "food-hall",
+      "floor": "2",
+      "name": "Food Hall",
+      "category": "Фудкорт",
+      "image": "/media/home/event-desserts.jpg",
+      "logoImage": "/media/home/event-desserts.jpg",
+      "phone": "+375 (29) 808-80-80",
+      "workHours": "10:00 - 22:00 ежедневно",
+      "description": "Food Hall объединяет кухни разных стран и уютные посадочные зоны для обеда и встреч."
+    },
+    {
+      "id": 9,
+      "slug": "bowling-club",
+      "floor": "2",
+      "name": "Bowling Club",
+      "category": "Активный отдых",
+      "image": "/media/home/event-fashion.jpg",
+      "logoImage": "/media/home/event-fashion.jpg",
+      "phone": "+375 (29) 909-90-90",
+      "workHours": "10:00 - 22:00 ежедневно",
+      "description": "Bowling Club - активный отдых для друзей и семьи, турниры и специальные вечерние программы."
+    },
+    {
+      "id": 10,
+      "slug": "car-wash-express",
+      "floor": "parking",
+      "name": "Car Wash Express",
+      "category": "Автосервис",
+      "image": "/media/home/location-map.jpg",
+      "logoImage": "/media/home/location-map.jpg",
+      "phone": "+375 (29) 010-10-10",
+      "workHours": "Круглосуточно",
+      "description": "Car Wash Express на паркинге обеспечивает быструю мойку и базовый уход за автомобилем 24/7."
+    },
+    {
+      "id": 11,
+      "slug": "auto-details",
+      "floor": "parking",
+      "name": "Auto Details",
+      "category": "Шиномонтаж",
+      "image": "/media/home/sale-campaign.jpg",
+      "logoImage": "/media/home/sale-campaign.jpg",
+      "phone": "+375 (29) 111-11-11",
+      "workHours": "Круглосуточно",
+      "description": "Auto Details предоставляет шиномонтаж, проверку давления и сезонное хранение шин."
+    },
+    {
+      "id": 12,
+      "slug": "drive-coffee",
+      "floor": "parking",
+      "name": "Drive Coffee",
+      "category": "Кофе с собой",
+      "image": "/media/shops/fresh-market-logo.jpg",
+      "logoImage": "/media/shops/fresh-market-logo.jpg",
+      "phone": "+375 (29) 212-12-12",
+      "workHours": "Круглосуточно",
+      "description": "Drive Coffee - точка кофе и быстрых перекусов на выезде с паркинга."
+    },
+    {
+      "id": 13,
+      "slug": "yum-yum",
+      "floor": "0",
+      "roomId": "e-18",
+      "name": "Yum Yum",
+      "category": "Магазин вкусняшек",
+      "image": "/media/shops/yum-yum-logo.png",
+      "logoImage": "/media/shops/yum-yum-logo.png",
+      "phone": "+375 (29) 129-86-65",
+      "workHours": "10:00 - 20:00 ежедневно",
+      "description": "Yum Yum - магазин вкусняшек на цокольном этаже."
+    }
+  ],
+  "rentals": [
+    {
+      "id": "rental-e-3",
+      "slug": "pomeshchenie-0-03",
+      "roomId": "e-3",
+      "floor": "0",
+      "title": "Помещение 0-03",
+      "monthlyPrice": 1450,
+      "areaSqm": 28,
+      "owner": "beltiazhmash",
+      "heroImage": "/media/rentals/room-003-hero.jpg",
+      "galleryImages": [
+        "/media/rentals/room-003-gallery-1.jpg",
+        "/media/rentals/room-003-gallery-2.jpg",
+        "/media/rentals/room-003-gallery-3.jpg"
+      ],
+      "description": "Компактное помещение рядом с основным потоком посетителей. Подойдет для сервисной точки, небольшого шоурума, офиса продаж или пункта выдачи.",
+      "types": [
+        "retail",
+        "service"
+      ]
+    },
+    {
+      "id": "rental-e-4",
+      "slug": "pomeshchenie-0-04",
+      "roomId": "e-4",
+      "floor": "0",
+      "title": "Помещение 0-04",
+      "monthlyPrice": 2100,
+      "areaSqm": 41,
+      "owner": "private",
+      "heroImage": "/media/rentals/room-004-hero.jpg",
+      "galleryImages": [
+        "/media/rentals/room-004-gallery-1.jpg",
+        "/media/rentals/room-004-gallery-2.jpg",
+        "/media/rentals/room-004-gallery-3.jpg"
+      ],
+      "description": "Угловое помещение со сложной, но выразительной геометрией. Подходит под торговлю, showroom, сервисную стойку или комбинированный формат.",
+      "types": [
+        "retail",
+        "showroom",
+        "service"
+      ]
+    },
+    {
+      "id": "rental-e-8",
+      "slug": "pomeshchenie-0-08",
+      "roomId": "e-8",
+      "floor": "0",
+      "title": "Помещение 0-08",
+      "monthlyPrice": 3100,
+      "areaSqm": 84,
+      "owner": "beltiazhmash",
+      "heroImage": "/media/rentals/room-008-hero.jpg",
+      "galleryImages": [
+        "/media/rentals/room-008-gallery-1.jpg",
+        "/media/rentals/room-008-gallery-2.jpg",
+        "/media/rentals/room-008-gallery-3.jpg"
+      ],
+      "description": "Помещение правильной формы с удобной витриной вдоль основного прохода. Подойдет под бренд-зону, офис продаж, магазин аксессуаров или флагманский сервис.",
+      "types": [
+        "retail",
+        "office"
+      ]
+    },
+    {
+      "id": "rental-e-21",
+      "slug": "pomeshchenie-0-21",
+      "roomId": "e-21",
+      "floor": "0",
+      "title": "Помещение 0-21",
+      "monthlyPrice": 980,
+      "areaSqm": 18,
+      "owner": "private",
+      "heroImage": "/media/rentals/room-021-hero.jpg",
+      "galleryImages": [
+        "/media/rentals/room-021-gallery-1.jpg",
+        "/media/rentals/room-021-gallery-2.png",
+        "/media/rentals/room-021-gallery-3.jpg"
+      ],
+      "description": "Небольшое помещение под склад, сервисную поддержку арендаторов, выдачу заказов или компактный офис сопровождения.",
+      "types": [
+        "storage",
+        "service"
+      ]
+    }
+  ],
+  "technicalSpaces": [
+    {
+      "id": "tech-e-5",
+      "roomId": "e-5",
+      "floor": "0",
+      "title": "Санитарная зона 0-05",
+      "type": "toilet",
+      "description": "Техническое помещение санитарного назначения для посетителей торгового центра."
+    },
+    {
+      "id": "tech-e-6",
+      "roomId": "e-6",
+      "floor": "0",
+      "title": "Тамбур 0-06",
+      "type": "vestibule",
+      "description": "Промежуточная буферная зона между внешним и внутренним контуром торгового центра."
+    },
+    {
+      "id": "tech-e-9",
+      "roomId": "e-9",
+      "floor": "0",
+      "title": "Лестничный узел 0-09",
+      "type": "staircase",
+      "description": "Вертикальная коммуникация между этажами и служебными маршрутами здания."
+    },
+    {
+      "id": "tech-e-10",
+      "roomId": "e-10",
+      "floor": "0",
+      "title": "Зона персонала 0-10",
+      "type": "staff",
+      "description": "Помещение для сотрудников и технического обслуживания торгового центра."
+    }
+  ]
+}
