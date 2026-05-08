@@ -39,25 +39,25 @@ export const rentalOwnerLabels: Record<RentalOwner, string> = {
 };
 
 export const rentalSpaces: RentalSpace[] = [
-  {
-    id: "rental-e-3",
-    slug: "pomeshchenie-0-03",
-    roomId: "e-3",
-    floor: "0",
-    title: "Помещение 0-03",
-    monthlyPrice: 1450,
-    areaSqm: 28,
-    owner: "beltiazhmash",
-    heroImage: "/media/rentals/room-003-hero.jpg",
-    galleryImages: [
-      "/media/rentals/room-003-gallery-1.jpg",
-      "/media/rentals/room-003-gallery-2.jpg",
-      "/media/rentals/room-003-gallery-3.jpg",
-    ],
-    description:
-      "Компактное помещение рядом с основным потоком посетителей. Подойдет для сервисной точки, небольшого шоурума, офиса продаж или пункта выдачи.",
-    types: ["retail", "service"],
-  },
+  // {
+  //   id: "rental-e-3",
+  //   slug: "pomeshchenie-0-03",
+  //   roomId: "e-3",
+  //   floor: "0",
+  //   title: "Помещение 0-03",
+  //   monthlyPrice: 1450,
+  //   areaSqm: 28,
+  //   owner: "beltiazhmash",
+  //   heroImage: "/media/rentals/room-003-hero.jpg",
+  //   galleryImages: [
+  //     "/media/rentals/room-003-gallery-1.jpg",
+  //     "/media/rentals/room-003-gallery-2.jpg",
+  //     "/media/rentals/room-003-gallery-3.jpg",
+  //   ],
+  //   description:
+  //     "Компактное помещение рядом с основным потоком посетителей. Подойдет для сервисной точки, небольшого шоурума, офиса продаж или пункта выдачи.",
+  //   types: ["retail", "service"],
+  // },
   {
     id: "rental-e-4",
     slug: "pomeshchenie-0-04",

@@ -34,7 +34,8 @@ export const MAP_PADDING: MapCanvasPadding = {
 };
 
 export const MAP_WIDTH = MAP_BASE_WIDTH + MAP_PADDING.left + MAP_PADDING.right;
-export const MAP_HEIGHT = MAP_BASE_HEIGHT + MAP_PADDING.top + MAP_PADDING.bottom;
+export const MAP_HEIGHT =
+  MAP_BASE_HEIGHT + MAP_PADDING.top + MAP_PADDING.bottom;
 
 export const rooms: Room[] = [
   {
@@ -63,7 +64,7 @@ export const rooms: Room[] = [
   },
   {
     id: "e-3",
-    markerPlacement: { scale: 1, offsetY: 5  },
+    markerPlacement: { scale: 1 },
     roomNumber: "0-03",
     floor: "0",
     points: [
@@ -309,6 +310,66 @@ export const rooms: Room[] = [
       [498.4, 498.4],
       [516.4, 498.4],
       [516.4, 437],
+    ],
+  },
+  {
+    id: "e-23",
+    markerPlacement: { scale: 1 },
+    roomNumber: "0-23",
+    floor: "0",
+    points: [
+      [516.4, 437],
+      [516.4, 498.4],
+      [561.2, 498.4],
+      [561.2, 437],
+    ],
+  },
+  {
+    id: "e-24",
+    markerPlacement: { scale: 1 },
+    roomNumber: "0-24",
+    floor: "0",
+    points: [
+      [561.2, 437],
+      [561.2, 498.4],
+      [596.4, 498.4],
+      [596.4, 437],
+    ],
+  },
+  {
+    id: "e-25",
+    markerPlacement: { scale: 1 },
+    roomNumber: "0-25",
+    floor: "0",
+    points: [
+      [596.4, 437],
+      [596.4, 498.4],
+      [620.8, 498.4],
+      [620.8, 437],
+    ],
+  },
+  {
+    id: "e-26",
+    markerPlacement: { scale: 1 },
+    roomNumber: "0-26",
+    floor: "0",
+    points: [
+      [0, 253],
+      [0, 383.5],
+      [55.2, 383.5],
+      [55.2, 253],
+    ],
+  },
+  {
+    id: "e-27",
+    markerPlacement: { scale: 0.25, offsetY: 3 },
+    roomNumber: "0-27",
+    floor: "0",
+    points: [
+      [55.2, 353.5],
+      [55.2, 373.5],
+      [78.3, 373.5],
+      [78.3, 353.5],
     ],
   },
 ];
